@@ -111,7 +111,7 @@ struct KthLargest {
 }
 
 
-/** 
+/**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
  */
@@ -130,7 +130,7 @@ impl KthLargest {
 
         Self { k: k as usize, nums: heap }
     }
-    
+
     fn add(&mut self, val: i32) -> i32 {
         // Get the current kth largest element
         self.nums.push(std::cmp::Reverse(val));
@@ -149,7 +149,7 @@ struct MyHashSet {
 }
 
 
-/** 
+/**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
  */
@@ -157,20 +157,20 @@ impl MyHashSet {
     fn new() -> Self {
         MyHashSet { items: vec![] }
     }
-    
+
     fn add(&mut self, key: i32) {
         if !self.contains(key) {
             self.items.push(key);
         }
     }
-    
+
     fn remove(&mut self, key: i32) {
         if self.contains(key) {
             let items: Vec<i32> = self.items.iter().filter(|x| x != &&key).map(|x| *x).collect();
             self.items = items;
         }
     }
-    
+
     fn contains(&self, key: i32) -> bool {
         self.items.contains(&key)
     }

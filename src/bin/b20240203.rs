@@ -9,7 +9,7 @@ pub struct TreeNode {
     pub left: Option<Rc<RefCell<TreeNode>>>,
     pub right: Option<Rc<RefCell<TreeNode>>>,
 }
- 
+
 impl TreeNode {
     #[inline]
     pub fn new(val: i32) -> Self {
@@ -178,7 +178,7 @@ fn sum_of_square_numbers_bs(c: i32) -> bool {
         let mut r: i64 = max_len;
 
         while l <= r {
-            // Find mid 
+            // Find mid
             let mid: i64 = (l + r) / 2;
             let sum = (start * start) + (mid * mid);
             if sum == fat_c {
