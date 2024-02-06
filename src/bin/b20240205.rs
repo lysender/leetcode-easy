@@ -24,6 +24,7 @@ fn main() {
     assert_eq!(h.contains(2), false);
 
     Solution::two_out_of_three(vec![], vec![], vec![]);
+    Solution::remove_to_equalize_freq("foo".to_string());
 }
 
 impl Solution {
@@ -141,6 +142,81 @@ impl Solution {
             .map(|(k, _v)| k as i32)
             .collect();
         result
+    }
+
+    pub fn remove_to_equalize_freq(word: String) -> bool {
+        let offset: usize = 97;
+
+        // Track each 26 character and count each
+        let mut map: [i32; 26] = [0; 26];
+
+        for i in word.as_bytes().iter() {
+            let index = *i as usize - offset;
+            map[index] += 1;
+        }
+
+        // Collect various number of counts
+        // Key is the count, value is the frequency
+        let mut counts: [i32; 101] = [0; 101];
+        for i in map.iter() {
+            if *i > 0 {
+                counts[*i as usize] += 1;
+            }
+        }
+
+        // Find the count keys
+        let count_keys: Vec<usize> = counts
+            .iter()
+            .enumerate()
+            .filter(|(k, v)| {
+                *k > 0 && **v > 0
+            })
+            .map(|(k, _v)| k)
+            .collect();
+
+        // println!("{:?}", counts);
+        // println!("{:?}", count_keys);
+        // println!("{:?}", word);
+
+        // To allow equalizing, any the following must be true:
+        // one count and count == 1
+        // one count and count frequency == 1
+        if count_keys.len() == 1 {
+            if count_keys[0] == 1 {
+                return true;
+            }
+            // count frequency
+            if counts[count_keys[0]] == 1 {
+                return true;
+            }
+        }
+
+        if count_keys.len() == 2 {
+            // To allow equalizing, all of the following must be true:
+            // difference between count must be 1
+            // one of the count frequency must be == 1
+            // count with frequency == 1 must have higher count than the other
+            let diff: i32 = count_keys[0] as i32 - count_keys[1] as i32;
+            if diff.abs() == 1 {
+                if counts[count_keys[0]] == 1 && count_keys[0] > count_keys[1] {
+                    return true;
+                }
+                if counts[count_keys[1]] == 1 && count_keys[1] > count_keys[0] {
+                    return true;
+                }
+            }
+
+            // Or if one of the count == 1 and frequency == 1
+            if count_keys[0] == 1 && counts[count_keys[0]] == 1 {
+                return true;
+            }
+            if count_keys[1] == 1 && counts[count_keys[1]] == 1 {
+                return true;
+            }
+        }
+
+        // Will not equalize
+        return false;
     }
 }
 
@@ -296,5 +372,18 @@ mod tests {
         let mut result = Solution::two_out_of_three(nums1, nums2, nums3);
         result.sort();
         assert_eq!(result, exp);
+    }
+
+    #[test]
+    fn test_remove_letter_to_equalize() {
+        assert_eq!(Solution::remove_to_equalize_freq("abcc".to_string()), true);
+        assert_eq!(Solution::remove_to_equalize_freq("aazz".to_string()), false);
+        assert_eq!(Solution::remove_to_equalize_freq("bac".to_string()), true);
+        assert_eq!(Solution::remove_to_equalize_freq("ddaccb".to_string()), false);
+        assert_eq!(Solution::remove_to_equalize_freq("cbccca".to_string()), false);
+        assert_eq!(Solution::remove_to_equalize_freq("zz".to_string()), true);
+        assert_eq!(Solution::remove_to_equalize_freq("cccd".to_string()), true);
+        assert_eq!(Solution::remove_to_equalize_freq("aaaabbbbccc".to_string()), false);
+        assert_eq!(Solution::remove_to_equalize_freq("abbcc".to_string()), true);
     }
 }
