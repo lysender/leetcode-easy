@@ -22,6 +22,8 @@ fn main() {
     assert_eq!(h.contains(2), true);
     h.remove(2);
     assert_eq!(h.contains(2), false);
+
+    Solution::two_out_of_three(vec![], vec![], vec![]);
 }
 
 impl Solution {
@@ -102,6 +104,43 @@ impl Solution {
         }
 
         result.iter().collect()
+    }
+
+    pub fn two_out_of_three(nums1: Vec<i32>, nums2: Vec<i32>, nums3: Vec<i32>) -> Vec<i32> {
+        let node: [i32; 3] = [0; 3];
+        let mut map: [[i32; 3]; 101] = [node; 101];
+
+        // Find the max len of the 3 arrays
+        let mut max: usize = nums1.len();
+        if nums2.len() > max {
+            max = nums2.len();
+        }
+        if nums3.len() > max {
+            max = nums3.len();
+        }
+
+        for i in 0..max {
+            if let Some(num1) = nums1.get(i) {
+                map[*num1 as usize][0] = 1;
+            }
+            if let Some(num2) = nums2.get(i) {
+                map[*num2 as usize][1] = 1;
+            }
+            if let Some(num3) = nums3.get(i) {
+                map[*num3 as usize][2] = 1;
+            }
+        }
+
+        let result: Vec<i32> = map
+            .iter()
+            .enumerate()
+            .filter(|(_k, v)| {
+                let sum: i32 = v.iter().sum();
+                sum > 1
+            })
+            .map(|(k, _v)| k as i32)
+            .collect();
+        result
     }
 }
 
@@ -235,5 +274,27 @@ mod tests {
         assert_eq!(h.contains(2), true);
         h.remove(2);
         assert_eq!(h.contains(2), false);
+    }
+
+    #[test]
+    fn test_two_out_of_three() {
+        let nums1: Vec<i32> = vec![1, 1, 3, 2];
+        let nums2: Vec<i32> = vec![2, 3];
+        let nums3: Vec<i32> = vec![3];
+        let exp: Vec<i32> = vec![2, 3];
+        let mut result = Solution::two_out_of_three(nums1, nums2, nums3);
+        result.sort();
+        assert_eq!(result, exp);
+    }
+
+    #[test]
+    fn test_two_out_of_three_data2() {
+        let nums1: Vec<i32> = vec![2,15,10,11,14,12,14,11,9,1];
+        let nums2: Vec<i32> = vec![8,9,13,2,11,8];
+        let nums3: Vec<i32> = vec![13,5,15,7,12,7,8,3,13,15];
+        let exp: Vec<i32> = vec![2,8,9,11,12,13,15];
+        let mut result = Solution::two_out_of_three(nums1, nums2, nums3);
+        result.sort();
+        assert_eq!(result, exp);
     }
 }
