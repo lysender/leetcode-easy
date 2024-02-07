@@ -25,6 +25,23 @@ fn main() {
 
     Solution::two_out_of_three(vec![], vec![], vec![]);
     Solution::remove_to_equalize_freq("foo".to_string());
+    Solution::middle_node(Some(Box::new(ListNode::new(1))));
+}
+// Definition for singly-linked list.
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+  pub val: i32,
+  pub next: Option<Box<ListNode>>
+}
+
+impl ListNode {
+  #[inline]
+  fn new(val: i32) -> Self {
+    ListNode {
+      next: None,
+      val
+    }
+  }
 }
 
 impl Solution {
@@ -218,6 +235,31 @@ impl Solution {
         // Will not equalize
         return false;
     }
+
+    pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        // Find the length of the list to get the middle
+        let mut length: usize = 0;
+        let mut current = head.clone();
+        // Track each element into an array
+        let mut items: Vec<Option<Box<ListNode>>> = Vec::new();
+        while let Some(item) = current {
+            items.push(Some(item.clone()));
+
+            length += 1;
+            current = item.next;
+        }
+
+        // println!("Len: {}", length);
+        if length == 0 {
+            return None;
+        }
+
+        let mid: usize = (length / 2) + 1;
+        match items.get(mid - 1) {
+            Some(val) => val.clone(),
+            None => None,
+        }
+    }
 }
 
 struct KthLargest {
@@ -385,5 +427,41 @@ mod tests {
         assert_eq!(Solution::remove_to_equalize_freq("cccd".to_string()), true);
         assert_eq!(Solution::remove_to_equalize_freq("aaaabbbbccc".to_string()), false);
         assert_eq!(Solution::remove_to_equalize_freq("abbcc".to_string()), true);
+    }
+
+    #[test]
+    fn test_middle_node1() {
+        let n5 = ListNode {
+            next: None,
+            val: 5,
+        };
+        let n4 = ListNode {
+            next: Some(Box::new(n5)),
+            val: 4,
+        };
+        let n3 = ListNode {
+            next: Some(Box::new(n4)),
+            val: 3,
+        };
+        let n2 = ListNode {
+            next: Some(Box::new(n3)),
+            val: 2,
+        };
+        let n1 = ListNode {
+            next: Some(Box::new(n2)),
+            val: 1,
+        };
+
+        let mid = Solution::middle_node(Some(Box::new(n1)));
+
+        // Collect mid to end
+        let mut items: Vec<i32> = Vec::new();
+        let mut current = mid.clone();
+        while let Some(ref current_val) = current {
+            items.push(current_val.val);
+
+            current = current_val.next.clone();
+        }
+        assert_eq!(items, vec![3, 4, 5]);
     }
 }
