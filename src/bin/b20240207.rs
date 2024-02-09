@@ -3,6 +3,7 @@ struct Solution {}
 fn main() {
     Solution::count_asterisks("".to_string());
     Solution::has_alternating_bits(5);
+    Solution::is_prefix_string("".to_string(), vec![]);
 }
 
 impl Solution {
@@ -43,11 +44,88 @@ impl Solution {
         // println!("{:?}", bin_s);
         true
     }
+
+    pub fn is_prefix_string(s: String, words: Vec<String>) -> bool {
+        for (k, _v) in words.iter().enumerate() {
+            let partial = words[0..(k + 1)].join("");
+            if partial == s {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_is_prefix_string() {
+        assert_eq!(
+            Solution::is_prefix_string(
+                "iloveleetcode".to_string(),
+                vec![
+                    "i".to_string(),
+                    "love".to_string(),
+                    "leetcode".to_string(),
+                    "apples".to_string(),
+                ]
+            ),
+            true,
+        );
+
+        assert_eq!(
+            Solution::is_prefix_string(
+                "iloveleetcode".to_string(),
+                vec![
+                    "apples".to_string(),
+                    "i".to_string(),
+                    "love".to_string(),
+                    "leetcode".to_string(),
+                ]
+            ),
+            false,
+        );
+
+        assert_eq!(
+            Solution::is_prefix_string(
+                "a".to_string(),
+                vec![
+                    "aa".to_string(),
+                    "aaaa".to_string(),
+                    "banana".to_string(),
+                ]
+            ),
+            false,
+        );
+
+        assert_eq!(
+            Solution::is_prefix_string(
+                "z".to_string(),
+                vec![
+                    "z".to_string(),
+                ]
+            ),
+            true,
+        );
+
+        assert_eq!(
+            Solution::is_prefix_string(
+                "aaaaaaa".to_string(),
+                vec![
+                    "a".to_string(),
+                    "a".to_string(),
+                    "a".to_string(),
+                    "a".to_string(),
+                    "a".to_string(),
+                    "a".to_string(),
+                    "a".to_string(),
+                ]
+            ),
+            true,
+        );
+    }
 
     #[test]
     fn test_count_asterisks() {
