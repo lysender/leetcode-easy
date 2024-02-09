@@ -4,6 +4,7 @@ fn main() {
     Solution::count_asterisks("".to_string());
     Solution::has_alternating_bits(5);
     Solution::is_prefix_string("".to_string(), vec![]);
+    Solution::title_to_number("AA".to_string());
 }
 
 impl Solution {
@@ -54,11 +55,34 @@ impl Solution {
         }
         return false;
     }
+
+    pub fn title_to_number(column_title: String) -> i32 {
+        let mut sum: i32 = 0;
+        column_title
+            .as_bytes()
+            .iter()
+            .rev()
+            .enumerate()
+            .for_each(|(exp, d)| {
+                let d26: i32 = *d as i32 - 64;
+                let d_val = d26 * 26_i32.pow(exp as u32);
+                sum += d_val;
+            });
+
+        sum
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_excel_title_to_number() {
+        assert_eq!(Solution::title_to_number("A".to_string()), 1);
+        assert_eq!(Solution::title_to_number("AB".to_string()), 28);
+        assert_eq!(Solution::title_to_number("ZY".to_string()), 701);
+    }
 
     #[test]
     fn test_is_prefix_string() {
