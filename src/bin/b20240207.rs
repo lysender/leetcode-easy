@@ -5,6 +5,7 @@ fn main() {
     Solution::has_alternating_bits(5);
     Solution::is_prefix_string("".to_string(), vec![]);
     Solution::title_to_number("AA".to_string());
+    Solution::transpose(vec![]);
 }
 
 impl Solution {
@@ -71,11 +72,60 @@ impl Solution {
 
         sum
     }
+    pub fn transpose(matrix: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+
+        // Fill in the matrix to prepare transpose
+        let zeroes: Vec<i32> = vec![0; rows];
+        let mut result: Vec<Vec<i32>> = vec![zeroes; cols];
+
+        for x in 0..rows {
+            for y in 0..cols {
+                result[y][x] = matrix[x][y];
+            }
+        }
+
+        result 
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_transpose_data1() {
+        let input: Vec<Vec<i32>> = vec![
+            vec![1, 2, 3],
+            vec![4, 5, 6],
+            vec![7, 8, 9],
+        ];
+
+        let expected: Vec<Vec<i32>> = vec![
+            vec![1, 4, 7],
+            vec![2, 5, 8],
+            vec![3, 6, 9],
+        ];
+
+        assert_eq!(Solution::transpose(input), expected);
+    }
+
+    #[test]
+    fn test_transpose_data2() {
+        let input: Vec<Vec<i32>> = vec![
+            vec![1, 2, 3],
+            vec![4, 5, 6],
+        ];
+
+        let expected: Vec<Vec<i32>> = vec![
+            vec![1, 4],
+            vec![2, 5],
+            vec![3, 6],
+        ];
+
+        assert_eq!(Solution::transpose(input), expected);
+    }
 
     #[test]
     fn test_excel_title_to_number() {
