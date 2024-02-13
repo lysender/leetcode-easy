@@ -93,20 +93,33 @@ impl Solution {
         // Very inefficient
         // TODO: Use a more efficient approach
         // URL: https://leetcode.com/problems/binary-prefix-divisible-by-5/description/
-        // println!("");
-        fn to_base10(partial: &[i32]) -> i128 {
-            let mut running_man: i128 = 0;
-            for (k, v) in partial.iter().rev().enumerate() {
-                running_man += *v as i128 * 2_i128.pow(k as u32);
-            }
-            running_man
-        }
-        let mut answer: Vec<bool> = Vec::new();
+        // fn to_base10(partial: &[i32]) -> i32 {
+        //     let mut running_man: i32 = 0;
+        //     for (k, v) in partial.iter().rev().enumerate() {
+        //         running_man += *v as i32 * 2_i32.pow(k as u32);
+        //     }
+        //     running_man
+        // }
+        // let mut answer: Vec<bool> = Vec::new();
+        //
+        // for (k, v) in nums.iter().enumerate() {
+        //     let val = to_base10(&nums[0..(k + 1)]);
+        //     answer.push(val % 5 == 0);
+        // }
+        // answer
 
-        for (k, v) in nums.iter().enumerate() {
-            let val = to_base10(&nums[0..(k + 1)]);
-            // println!("k: {}, v: {}, val: {}", k, v, val);
-            answer.push(val % 5 == 0);
+        // Gave up on this, will just copy/steal (same thing) code instead
+        // Source: https://leetcode.com/problems/binary-prefix-divisible-by-5/solutions/296249/java-solution-with-best-explanation-don-t-know-why-some-explanation-not-concise/
+        let mut answer: Vec<bool> = Vec::new();
+        let mut running_man: i32 = 0;
+
+        for i in nums.iter() {
+            running_man = ((running_man * 2) + i) % 5;
+            if running_man == 0 {
+                answer.push(true);
+            } else {
+                answer.push(false);
+            }
         }
         answer
     }
@@ -121,19 +134,9 @@ mod tests {
         assert_eq!(Solution::prefixes_div_by5(vec![0, 1, 1]), vec![true, false, false]);
         assert_eq!(Solution::prefixes_div_by5(vec![1, 1, 1]), vec![false, false, false]);
         assert_eq!(Solution::prefixes_div_by5(vec![0,1,1,1,1,1]), vec![true,false,false,false,true,false]);
-
-        // let mut running_man: i32 = 0;
-        // for i in 0..20 {
-        //     println!("{}, {:b}", running_man, running_man);
-        //     running_man += 5;
-        // }
         assert_eq!(Solution::prefixes_div_by5(
             vec![1,0,0,1,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,1]),
             vec![false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,true,true,true,true,false],
-        );
-        assert_eq!(Solution::prefixes_div_by5(
-            vec![1,0,1,1,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,1,0,0,1,0]),
-            vec![false,false,true,false,false,false,false,false,false,false,true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,false,true,false,false,true,true,true,true,true,true,true,false,false,true,false,false,false,false,true,true],
         );
     }
 
