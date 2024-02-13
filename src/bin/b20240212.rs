@@ -6,6 +6,7 @@ fn main() {
     Solution::day_of_year("2019-01-09".to_string());
     Solution::semi_ordered_permutation(vec![2, 1, 4, 3]);
     Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string());
+    Solution::prefixes_div_by5(vec![0, 1, 1]);
 }
 
 // Map months with number of days, index offset -1
@@ -87,11 +88,54 @@ impl Solution {
 
        s_index >= s.len()
     }
+
+    pub fn prefixes_div_by5(nums: Vec<i32>) -> Vec<bool> {
+        // Very inefficient
+        // TODO: Use a more efficient approach
+        // URL: https://leetcode.com/problems/binary-prefix-divisible-by-5/description/
+        // println!("");
+        fn to_base10(partial: &[i32]) -> i128 {
+            let mut running_man: i128 = 0;
+            for (k, v) in partial.iter().rev().enumerate() {
+                running_man += *v as i128 * 2_i128.pow(k as u32);
+            }
+            running_man
+        }
+        let mut answer: Vec<bool> = Vec::new();
+
+        for (k, v) in nums.iter().enumerate() {
+            let val = to_base10(&nums[0..(k + 1)]);
+            // println!("k: {}, v: {}, val: {}", k, v, val);
+            answer.push(val % 5 == 0);
+        }
+        answer
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_prefixes_div_by5() {
+        assert_eq!(Solution::prefixes_div_by5(vec![0, 1, 1]), vec![true, false, false]);
+        assert_eq!(Solution::prefixes_div_by5(vec![1, 1, 1]), vec![false, false, false]);
+        assert_eq!(Solution::prefixes_div_by5(vec![0,1,1,1,1,1]), vec![true,false,false,false,true,false]);
+
+        // let mut running_man: i32 = 0;
+        // for i in 0..20 {
+        //     println!("{}, {:b}", running_man, running_man);
+        //     running_man += 5;
+        // }
+        assert_eq!(Solution::prefixes_div_by5(
+            vec![1,0,0,1,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,1]),
+            vec![false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,true,true,true,true,false],
+        );
+        assert_eq!(Solution::prefixes_div_by5(
+            vec![1,0,1,1,1,1,0,0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1,1,1,0,0,1,0]),
+            vec![false,false,true,false,false,false,false,false,false,false,true,true,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,true,false,false,true,false,false,true,true,true,true,true,true,true,false,false,true,false,false,false,false,true,true],
+        );
+    }
 
     #[test]
     fn test_is_subsequence() {
