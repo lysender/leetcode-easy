@@ -5,6 +5,7 @@ struct Solution {}
 fn main() {
     Solution::day_of_year("2019-01-09".to_string());
     Solution::semi_ordered_permutation(vec![2, 1, 4, 3]);
+    Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string());
 }
 
 // Map months with number of days, index offset -1
@@ -65,11 +66,39 @@ impl Solution {
         // println!("first_index: {}, last_index: {}", first_index, last_index);
         swaps
     }
+
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        // Loop s and t at the same time
+        // Only move s index when it matched t element
+        let mut s_index: usize = 0;
+
+        let s_bytes = s.as_bytes();
+        let t_bytes = t.as_bytes();
+
+        for i in t_bytes.iter() {
+            if s_index < s_bytes.len() && s_bytes[s_index] == *i {
+                s_index += 1;
+
+                if s_index >= s.len() {
+                    return true;
+                }
+            }
+        }
+
+       s_index >= s.len()
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_is_subsequence() {
+        assert_eq!(Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string()), true);
+        assert_eq!(Solution::is_subsequence("axc".to_string(), "ahbgdc".to_string()), false);
+        assert_eq!(Solution::is_subsequence("".to_string(), "ahbgdc".to_string()), true);
+    }
 
     #[test]
     fn test_semi_ordered_permutation() {
