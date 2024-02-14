@@ -1,6 +1,24 @@
 use core::panic;
+use std::{rc::Rc, cell::RefCell};
 
 struct Solution {}
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+  pub val: i32,
+  pub left: Option<Rc<RefCell<TreeNode>>>,
+  pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+  #[inline]
+  pub fn new(val: i32) -> Self {
+    TreeNode {
+      val,
+      left: None,
+      right: None
+    }
+  }
+}
 
 fn main() {
     Solution::day_of_year("2019-01-09".to_string());
@@ -8,6 +26,7 @@ fn main() {
     Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string());
     Solution::prefixes_div_by5(vec![0, 1, 1]);
     Solution::sort_array_by_parity_ii(vec![0, 1, 1]);
+    Solution::evaluate_tree(None);
 }
 
 // Map months with number of days, index offset -1
@@ -141,11 +160,47 @@ impl Solution {
         }
         result
     }
+
+    pub fn evaluate_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn eval_node(node: Option<Rc<RefCell<TreeNode>>>) -> bool {
+            if let Some(node_rc) = node {
+                // Extract value from rc
+                let node_val = node_rc.borrow();
+                return match node_val.val {
+                    0 => false,
+                    1 => true,
+                    2 => eval_node(node_val.left.clone()) || eval_node(node_val.right.clone()),
+                    _ => eval_node(node_val.left.clone()) && eval_node(node_val.right.clone()),
+                }
+            }
+            false
+        }
+
+        eval_node(root)
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_evaluate_tree() {
+        let l2 = TreeNode::new(0);
+        let r2 = TreeNode::new(1);
+        let l1 = TreeNode::new(1);
+        let r1 = TreeNode {
+            val: 3,
+            left: Some(Rc::new(RefCell::new(l2))),
+            right: Some(Rc::new(RefCell::new(r2))),
+        };
+        let root = TreeNode {
+            val: 2,
+            left: Some(Rc::new(RefCell::new(l1))),
+            right: Some(Rc::new(RefCell::new(r1))),
+        };
+        assert_eq!(Solution::evaluate_tree(Some(Rc::new(RefCell::new(root)))), true);
+    }
 
     #[test]
     fn test_sort_array_by_parity_ii() {
