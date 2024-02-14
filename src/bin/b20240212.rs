@@ -7,6 +7,7 @@ fn main() {
     Solution::semi_ordered_permutation(vec![2, 1, 4, 3]);
     Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string());
     Solution::prefixes_div_by5(vec![0, 1, 1]);
+    Solution::sort_array_by_parity_ii(vec![0, 1, 1]);
 }
 
 // Map months with number of days, index offset -1
@@ -123,11 +124,33 @@ impl Solution {
         }
         answer
     }
+
+    pub fn sort_array_by_parity_ii(nums: Vec<i32>) -> Vec<i32> {
+        let mut result: Vec<i32> = nums.clone();
+        let mut odd: usize = 1;
+        let mut even: usize = 0;
+
+        for i in nums.iter() {
+            if i % 2 == 0 {
+                result[even] = *i;
+                even += 2;
+            } else {
+                result[odd] = *i;
+                odd += 2;
+            }
+        }
+        result
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_sort_array_by_parity_ii() {
+        assert_eq!(Solution::sort_array_by_parity_ii(vec![4, 2, 5, 7]), [4, 5, 2, 7]);
+    }
 
     #[test]
     fn test_prefixes_div_by5() {
