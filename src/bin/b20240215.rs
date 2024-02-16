@@ -3,6 +3,7 @@ struct Solution {}
 fn main() {
     Solution::find_relative_ranks(vec![]);
     Solution::is_happy(2);
+    Solution::sorted_squares(vec![1, 2, 3]);
 }
 
 impl Solution {
@@ -66,7 +67,7 @@ impl Solution {
                 .map(|x| x * x)
                 .sum();
 
-            println!("digits: {:?}, sum: {}", digits, sum);
+            // println!("digits: {:?}, sum: {}", digits, sum);
 
             if sum < 10 {
                 if sum == single_digit {
@@ -79,15 +80,31 @@ impl Solution {
             digits = to_digits(sum);
         }
 
-        println!("{:?}", digits);
+        // println!("{:?}", digits);
 
         return digits[0] == 1;
+    }
+
+    pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
+        let mut answer: Vec<i32> = nums
+            .iter()
+            .map(|x| x * x)
+            .collect();
+
+        answer.sort();
+        answer
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_sorted_squares() {
+        assert_eq!(Solution::sorted_squares(vec![-4,-1,0,3,10]), vec![0,1,9,16,100]);
+        assert_eq!(Solution::sorted_squares(vec![-7,-3,2,3,11]), vec![4,9,9,49,121]);
+    }
 
     #[test]
     fn test_is_happy() {
