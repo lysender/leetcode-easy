@@ -2,6 +2,7 @@ struct Solution {}
 
 fn main() {
     Solution::find_relative_ranks(vec![]);
+    Solution::is_happy(2);
 }
 
 impl Solution {
@@ -32,11 +33,68 @@ impl Solution {
 
         answer
     }
+
+    pub fn is_happy(n: i32) -> bool {
+        fn to_digits(x: i32) -> Vec<i32> {
+            x.to_string()
+            .chars()
+            .map(|ch| {
+                let digit: i32 = ch.to_string().parse().unwrap();
+                digit
+            })
+            .collect()
+        }
+
+        let mut digits = to_digits(n);
+
+        fn is_done(x_digits: &Vec<i32>) -> bool {
+            if x_digits.len() == 0 {
+                // No more items, for some reason
+                return true;
+            }
+            if x_digits.len() == 1 && x_digits[0] == 1 {
+                return true;
+            }
+            false
+        }
+
+        let mut single_digit: i32 = 0;
+
+        while !is_done(&digits) {
+            let sum: i32 = digits
+                .iter()
+                .map(|x| x * x)
+                .sum();
+
+            println!("digits: {:?}, sum: {}", digits, sum);
+
+            if sum < 10 {
+                if sum == single_digit {
+                    // Infinite loop, let's get out of here
+                    break;
+                }
+                single_digit = sum;
+            }
+
+            digits = to_digits(sum);
+        }
+
+        println!("{:?}", digits);
+
+        return digits[0] == 1;
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_is_happy() {
+        assert_eq!(Solution::is_happy(19), true);
+        assert_eq!(Solution::is_happy(7), true);
+        assert_eq!(Solution::is_happy(2), false);
+    }
 
     #[test]
     fn test_find_relative_rank() {
