@@ -6,6 +6,7 @@ fn main() {
     Solution::sorted_squares(vec![1, 2, 3]);
     Solution::min_max_game(vec![1,3,5,2,4,8,2,2]);
     Solution::find_missing_and_repeated_values(vec![vec![1, 3], vec![2, 2]]);
+    Solution::sort_array_by_parity(vec![3, 1, 2, 4]);
 }
 
 impl Solution {
@@ -159,11 +160,33 @@ impl Solution {
         }
         answer
     }
+
+    pub fn sort_array_by_parity(nums: Vec<i32>) -> Vec<i32> {
+        let mut answer: Vec<i32> = vec![0; nums.len()];
+        let mut even: usize = 0;
+        let mut odd: usize = nums.len() - 1;
+
+        for v in nums.iter() {
+            if v % 2 == 0 {
+                answer[even] = *v;
+                even += 1;
+            } else {
+                answer[odd] = *v;
+                odd -= 1;
+            }
+        }
+        answer
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_sort_array_by_parity() {
+        assert_eq!(Solution::sort_array_by_parity(vec![3, 1, 2, 4]), vec![2, 4, 1, 3]);
+    }
 
     #[test]
     fn test_missing_and_repeated_values() {
