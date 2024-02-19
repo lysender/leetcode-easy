@@ -5,6 +5,7 @@ fn main() {
     Solution::is_happy(2);
     Solution::sorted_squares(vec![1, 2, 3]);
     Solution::min_max_game(vec![1,3,5,2,4,8,2,2]);
+    Solution::find_missing_and_repeated_values(vec![vec![1, 3], vec![2, 2]]);
 }
 
 impl Solution {
@@ -132,11 +133,49 @@ impl Solution {
 
         return nums[0];
     }
+
+    pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
+        let markers_len = grid.len() * grid.len();
+        let mut markers: Vec<bool> = vec![false; markers_len];
+        let mut answer: Vec<i32> = vec![0, 0];
+
+        for x in 0..(grid.len()) {
+            for y in 0..(grid.len()) {
+                let val = (grid[x][y] as usize) - 1_usize;
+
+                let existing = markers[val];
+                if existing {
+                    // This is the repeated value
+                    answer[0] = grid[x][y];
+                }
+                markers[val] = true;
+            }
+        }
+        // Find the missing value
+        for (k, v) in markers.iter().enumerate() {
+            if !v {
+                answer[1] = k as i32 + 1_i32;
+            }
+        }
+        answer
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_missing_and_repeated_values() {
+        assert_eq!(
+            Solution::find_missing_and_repeated_values(vec![vec![1, 3], vec![2, 2]]),
+            vec![2, 4],
+        );
+        assert_eq!(
+            Solution::find_missing_and_repeated_values(vec![vec![9, 1, 7], vec![8, 9, 2], vec![3, 4, 6]]),
+            vec![9, 5],
+        );
+    }
 
     #[test]
     fn test_min_max_game() {
