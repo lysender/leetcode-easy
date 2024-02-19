@@ -4,6 +4,7 @@ fn main() {
     Solution::find_relative_ranks(vec![]);
     Solution::is_happy(2);
     Solution::sorted_squares(vec![1, 2, 3]);
+    Solution::min_max_game(vec![1,3,5,2,4,8,2,2]);
 }
 
 impl Solution {
@@ -94,11 +95,54 @@ impl Solution {
         answer.sort();
         answer
     }
+
+    pub fn min_max_game(mut nums: Vec<i32>) -> i32 {
+        let mut half_life: usize = 0;
+        if nums.len() > 1 {
+            half_life = nums.len() / 2;
+        }
+
+        while half_life > 0 {
+            // Compute values in-place, replacing items in nums
+            // but decrease max length on each process
+            for i in 0..half_life {
+                let v1 = nums[2_usize * i];
+                let v2 = nums[(2_usize * i) + 1];
+
+                if i % 2 == 0 {
+                    // Use min
+                    if v1 < v2 {
+                        nums[i] = v1;
+                    } else {
+                        nums[i] = v2;
+                    }
+                } else {
+                    // Use max
+                    if v1 > v2 {
+                        nums[i] = v1;
+                    } else {
+                        nums[i] = v2;
+                    }
+                }
+            }
+
+            // Reduce in half
+            half_life /= 2;
+        }
+
+        return nums[0];
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_min_max_game() {
+        assert_eq!(Solution::min_max_game(vec![1,3,5,2,4,8,2,2]), 1);
+        assert_eq!(Solution::min_max_game(vec![3]), 3);
+    }
 
     #[test]
     fn test_sorted_squares() {
