@@ -20,7 +20,6 @@ impl Solution {
             for k in 0..num_people {
                 let share: i32 = (num_people * row) + (k + 1);
                 let remaining = x - share;
-                println!("row: {}, k: {}, share: {}, remaining: {}", row, k, share, remaining);
                 if remaining < 1 {
                     // We run out of candies
                     // Give all remaining candies to the user
@@ -42,17 +41,13 @@ impl Solution {
         let mut visits: Vec<i32> = vec![0; n as usize];
         let mut prev: Option<usize> = None;
 
-        for (k, v) in rounds.iter().enumerate().skip(1) {
+        for (k, _v) in rounds.iter().enumerate().skip(1) {
             let start = rounds[k - 1] as usize;
             let end = rounds[k] as usize;
             let mut current = start;
 
-            println!("k: {}, n: {}", k, v);
-
-
             // Round it up until we reach end
             loop {
-                println!("current: {}", current);
                 // Mark as visited but only if it was not previously visited
                 let mut is_visited = false;
                 if let Some(prev_val) = prev {
@@ -80,7 +75,6 @@ impl Solution {
             }
         }
 
-        println!("visits: {:?}", visits);
         // Find the most visited item
         let max = visits.iter().max();
         if let Some(max_val) = max {
