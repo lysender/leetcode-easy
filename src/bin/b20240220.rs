@@ -4,6 +4,7 @@ fn main() {
     Solution::prefix_count(vec![], "at".to_string());
     Solution::distribute_candies(7, 3);
     Solution::most_visited(4, vec![1, 3, 1, 2]);
+    Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]);
 }
 
 impl Solution {
@@ -87,11 +88,46 @@ impl Solution {
         }
         vec![] 
     }
+
+    pub fn sort_by_bits(mut arr: Vec<i32>) -> Vec<i32> {
+        // fn count_ones(n: i32) -> i32 {
+        //     let mut ones: i32 = 0;
+        //     let mut running_man = n;
+        //     while running_man > 0 {
+        //         if running_man % 2 == 1 {
+        //             ones += 1;
+        //         }
+        //         running_man /= 2;
+        //     }
+        //     ones
+        // }
+
+        arr.sort_unstable_by(|a, b| {
+            let a_ones = a.count_ones();
+            let b_ones = b.count_ones();
+
+            let ord = a_ones.cmp(&b_ones);
+            match ord {
+                std::cmp::Ordering::Equal => {
+                    a.cmp(b)
+                },
+                _ => ord
+            }
+        });
+        arr 
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_sort_by_bits() {
+        assert_eq!(Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]), vec![0,1,2,4,8,3,5,6,7]);
+        assert_eq!(Solution::sort_by_bits(vec![1024,512,256,128,64,32,16,8,4,2,1]), vec![1,2,4,8,16,32,64,128,256,512,1024]);
+    }
+
 
     #[test]
     fn test_most_visited() {
