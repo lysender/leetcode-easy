@@ -5,6 +5,7 @@ fn main() {
     Solution::distribute_candies(7, 3);
     Solution::most_visited(4, vec![1, 3, 1, 2]);
     Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]);
+    Solution::even_odd_bit(12);
 }
 
 impl Solution {
@@ -116,6 +117,27 @@ impl Solution {
         });
         arr 
     }
+
+    pub fn even_odd_bit(n: i32) -> Vec<i32> {
+        let mut answer: Vec<i32> = vec![0; 2];
+
+        let mut runner = n;
+        let mut index: i32 = 0;
+        while runner > 0 {
+            let rem = runner % 2;
+            if rem == 1 {
+                if index % 2 == 0 {
+                    answer[0] += 1;
+                } else {
+                    answer[1] += 1;
+                }
+            }
+            index += 1;
+            runner /= 2;
+        }
+
+        answer 
+    }
 }
 
 #[cfg(test)]
@@ -123,11 +145,16 @@ mod tests {
     use super::*;
 
     #[test]
+    fn test_odd_bit() {
+        assert_eq!(Solution::even_odd_bit(17), vec![2, 0]);
+        assert_eq!(Solution::even_odd_bit(2), vec![0, 1]);
+    }
+
+    #[test]
     fn test_sort_by_bits() {
         assert_eq!(Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]), vec![0,1,2,4,8,3,5,6,7]);
         assert_eq!(Solution::sort_by_bits(vec![1024,512,256,128,64,32,16,8,4,2,1]), vec![1,2,4,8,16,32,64,128,256,512,1024]);
     }
-
 
     #[test]
     fn test_most_visited() {
