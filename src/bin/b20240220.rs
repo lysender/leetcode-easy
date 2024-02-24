@@ -145,7 +145,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_odd_bit() {
+    fn test_event_odd_bit() {
         assert_eq!(Solution::even_odd_bit(17), vec![2, 0]);
         assert_eq!(Solution::even_odd_bit(2), vec![0, 1]);
     }
