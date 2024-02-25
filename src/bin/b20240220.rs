@@ -1,3 +1,5 @@
+use core::panic;
+
 struct Solution {}
 
 fn main() {
@@ -6,6 +8,8 @@ fn main() {
     Solution::most_visited(4, vec![1, 3, 1, 2]);
     Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]);
     Solution::even_odd_bit(12);
+    Solution::max_subsequence(vec![2,1,3,3], 2);
+    Solution::judge_circle("UD".to_string());
 }
 
 impl Solution {
@@ -138,11 +142,72 @@ impl Solution {
 
         answer 
     }
+
+    pub fn max_subsequence(nums: Vec<i32>, k: i32) -> Vec<i32> {
+        // Sort it then get the largest k elements
+        let mut sorted: Vec<(i32, usize)> = nums
+            .iter()
+            .enumerate()
+            .map(|(k, v)| (*v, k))
+            .collect();
+
+        sorted.sort_by(|a, b| a.0.cmp(&b.0));
+
+        let mut top_k: Vec<(i32, usize)> = sorted[(nums.len() - k as usize)..(nums.len())].to_vec();
+        // Sort it again by index
+        top_k.sort_by(|a, b| a.1.cmp(&b.1));
+
+        // Reconstruct the result
+        let answer: Vec<i32> = top_k.iter().map(|(v, _k)| *v).collect();
+        answer
+    }
+
+    pub fn judge_circle(moves: String) -> bool {
+        if moves.len() % 2 != 0 {
+            return false;
+        }
+
+        let mut v: i32 = 0;
+        let mut h: i32 = 0;
+
+        for c in moves.chars() {
+            match c {
+                'U' => {
+                    v += 1;
+                },
+                'D' => {
+                    v -= 1;
+                },
+                'L' => {
+                    h -= 1;
+                },
+                'R' => {
+                    h += 1;
+                },
+                _ => panic!("Invalid move")
+            };
+        }
+
+        v == 0 && h == 0
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_judge_circle() {
+        assert_eq!(Solution::judge_circle("UD".to_string()), true);
+        assert_eq!(Solution::judge_circle("LL".to_string()), false);
+    }
+
+    #[test]
+    fn test_max_subsequence() {
+        assert_eq!(Solution::max_subsequence(vec![2,1,3,3], 2), vec![3, 3]);
+        assert_eq!(Solution::max_subsequence(vec![-1,-2,3,4], 3), vec![-1,3,4]);
+        assert_eq!(Solution::max_subsequence(vec![3,4,3,3], 2), vec![4,3]);
+    }
 
     #[test]
     fn test_event_odd_bit() {
