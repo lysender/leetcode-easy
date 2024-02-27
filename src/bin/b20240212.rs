@@ -1,23 +1,23 @@
 use core::panic;
-use std::{rc::Rc, cell::RefCell};
+use std::{cell::RefCell, rc::Rc};
 
 struct Solution {}
 #[derive(Debug, PartialEq, Eq)]
 pub struct TreeNode {
-  pub val: i32,
-  pub left: Option<Rc<RefCell<TreeNode>>>,
-  pub right: Option<Rc<RefCell<TreeNode>>>,
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
 }
 
 impl TreeNode {
-  #[inline]
-  pub fn new(val: i32) -> Self {
-    TreeNode {
-      val,
-      left: None,
-      right: None
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
     }
-  }
 }
 
 fn main() {
@@ -30,15 +30,18 @@ fn main() {
 }
 
 // Map months with number of days, index offset -1
-const MONTHS: &'static[i32; 12] = &[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+const MONTHS: &'static [i32; 12] = &[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 impl Solution {
     pub fn day_of_year(date: String) -> i32 {
         // Split the date parts
-        let chunks: Vec<i32> = date.split("-").map(|chunk| {
-            let num: i32 = chunk.parse().unwrap();
-            num
-        }).collect();
+        let chunks: Vec<i32> = date
+            .split("-")
+            .map(|chunk| {
+                let num: i32 = chunk.parse().unwrap();
+                num
+            })
+            .collect();
 
         if chunks.len() != 3 {
             panic!("Requires 3 date parts.");
@@ -106,7 +109,7 @@ impl Solution {
             }
         }
 
-       s_index >= s.len()
+        s_index >= s.len()
     }
 
     pub fn prefixes_div_by5(nums: Vec<i32>) -> Vec<bool> {
@@ -171,7 +174,7 @@ impl Solution {
                     1 => true,
                     2 => eval_node(node_val.left.clone()) || eval_node(node_val.right.clone()),
                     _ => eval_node(node_val.left.clone()) && eval_node(node_val.right.clone()),
-                }
+                };
             }
             false
         }
@@ -199,30 +202,62 @@ mod tests {
             left: Some(Rc::new(RefCell::new(l1))),
             right: Some(Rc::new(RefCell::new(r1))),
         };
-        assert_eq!(Solution::evaluate_tree(Some(Rc::new(RefCell::new(root)))), true);
+        assert_eq!(
+            Solution::evaluate_tree(Some(Rc::new(RefCell::new(root)))),
+            true
+        );
     }
 
     #[test]
     fn test_sort_array_by_parity_ii() {
-        assert_eq!(Solution::sort_array_by_parity_ii(vec![4, 2, 5, 7]), [4, 5, 2, 7]);
+        assert_eq!(
+            Solution::sort_array_by_parity_ii(vec![4, 2, 5, 7]),
+            [4, 5, 2, 7]
+        );
     }
 
     #[test]
     fn test_prefixes_div_by5() {
-        assert_eq!(Solution::prefixes_div_by5(vec![0, 1, 1]), vec![true, false, false]);
-        assert_eq!(Solution::prefixes_div_by5(vec![1, 1, 1]), vec![false, false, false]);
-        assert_eq!(Solution::prefixes_div_by5(vec![0,1,1,1,1,1]), vec![true,false,false,false,true,false]);
-        assert_eq!(Solution::prefixes_div_by5(
-            vec![1,0,0,1,0,1,0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0,0,0,0,1,1,0,1,0,0,0,1]),
-            vec![false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,true,true,true,true,false],
+        assert_eq!(
+            Solution::prefixes_div_by5(vec![0, 1, 1]),
+            vec![true, false, false]
+        );
+        assert_eq!(
+            Solution::prefixes_div_by5(vec![1, 1, 1]),
+            vec![false, false, false]
+        );
+        assert_eq!(
+            Solution::prefixes_div_by5(vec![0, 1, 1, 1, 1, 1]),
+            vec![true, false, false, false, true, false]
+        );
+        assert_eq!(
+            Solution::prefixes_div_by5(vec![
+                1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0,
+                0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1
+            ]),
+            vec![
+                false, false, false, false, false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false, false, false, false, false, false,
+                false, false, false, false, false, false, false, true, false, false, true, true,
+                true, true, false
+            ],
         );
     }
 
     #[test]
     fn test_is_subsequence() {
-        assert_eq!(Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string()), true);
-        assert_eq!(Solution::is_subsequence("axc".to_string(), "ahbgdc".to_string()), false);
-        assert_eq!(Solution::is_subsequence("".to_string(), "ahbgdc".to_string()), true);
+        assert_eq!(
+            Solution::is_subsequence("abc".to_string(), "ahbgdc".to_string()),
+            true
+        );
+        assert_eq!(
+            Solution::is_subsequence("axc".to_string(), "ahbgdc".to_string()),
+            false
+        );
+        assert_eq!(
+            Solution::is_subsequence("".to_string(), "ahbgdc".to_string()),
+            true
+        );
     }
 
     #[test]

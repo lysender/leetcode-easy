@@ -39,7 +39,7 @@ impl Solution {
                 'C' => 100,
                 'D' => 500,
                 'M' => 1000,
-                _ => panic!("Invalid Roman Numeral")
+                _ => panic!("Invalid Roman Numeral"),
             }
         }
 
@@ -96,8 +96,14 @@ mod tests {
 
     #[test]
     fn test_remove_outer_parentheses() {
-        assert_eq!(Solution::remove_outer_parentheses("(()())(())".to_string()), "()()()");
-        assert_eq!(Solution::remove_outer_parentheses("(()())(())(()(()))".to_string()), "()()()()(())");
+        assert_eq!(
+            Solution::remove_outer_parentheses("(()())(())".to_string()),
+            "()()()"
+        );
+        assert_eq!(
+            Solution::remove_outer_parentheses("(()())(())(()(()))".to_string()),
+            "()()()()(())"
+        );
         assert_eq!(Solution::remove_outer_parentheses("()()".to_string()), "");
     }
 }

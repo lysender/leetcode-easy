@@ -1,6 +1,6 @@
-use std::{time::Instant, collections::HashSet};
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
+use std::{collections::HashSet, time::Instant};
 
 // Definition for a binary tree node.
 #[derive(Debug, PartialEq, Eq)]
@@ -37,9 +37,10 @@ fn solution_number_of_even_digits() {
 }
 
 fn even_number_of_digits(nums: Vec<i32>) -> i32 {
-    let evens: Vec<&i32> = nums.iter().filter(|n| {
-        n.to_string().len() % 2 == 0
-    }).collect();
+    let evens: Vec<&i32> = nums
+        .iter()
+        .filter(|n| n.to_string().len() % 2 == 0)
+        .collect();
 
     evens.len() as i32
 }
@@ -135,7 +136,7 @@ fn sum_of_left_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
 
     fn inner_sum(node: Option<Rc<RefCell<TreeNode>>>, is_left: bool) -> i32 {
         let mut sum: i32 = 0;
-            if let Some(node_val) = node {
+        if let Some(node_val) = node {
             let inner_node = node_val.borrow();
             if inner_node.left.is_none() && inner_node.right.is_none() {
                 if is_left {
@@ -285,11 +286,11 @@ fn categorize_box(length: i32, width: i32, height: i32, mass: i32) -> String {
     let mut bulky = false;
     let mut heavy = false;
 
-    if l>= pow_104 || w>= pow_104 || h>= pow_104 || volume >= pow_109{
+    if l >= pow_104 || w >= pow_104 || h >= pow_104 || volume >= pow_109 {
         bulky = true;
     }
 
-    if m>= 100 {
+    if m >= 100 {
         heavy = true;
     }
 

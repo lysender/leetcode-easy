@@ -3,14 +3,35 @@ fn main() {
 }
 
 fn solution_add_to_array_form_of_integer() {
-    assert_eq!(add_to_array_form_of_integer(vec![1, 2, 0, 0], 34), vec![1, 2, 3, 4]);
-    assert_eq!(add_to_array_form_of_integer(vec![2, 7, 4], 181), vec![4, 5, 5]);
-    assert_eq!(add_to_array_form_of_integer(vec![2, 1, 5], 806), vec![1, 0, 2, 1]);
-    assert_eq!(add_to_array_form_of_integer(vec![9, 9, 9, 9, 9, 9, 9, 9, 9, 9], 1), vec![1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
     assert_eq!(
-    add_to_array_form_of_integer(vec![3,5,8,6,9,7,8,3,8,5,4,1,6,7,4,1,0,1,7,7,1,5,3,2,9,3,4,1,0,5,8,6,9,9,4,8,7,0,2,8,2,4,7,0,4,4,3,7,2,2], 142),
-    vec![3,5,8,6,9,7,8,3,8,5,4,1,6,7,4,1,0,1,7,7,1,5,3,2,9,3,4,1,0,5,8,6,9,9,4,8,7,0,2,8,2,4,7,0,4,4,3,8,6,4]
-);
+        add_to_array_form_of_integer(vec![1, 2, 0, 0], 34),
+        vec![1, 2, 3, 4]
+    );
+    assert_eq!(
+        add_to_array_form_of_integer(vec![2, 7, 4], 181),
+        vec![4, 5, 5]
+    );
+    assert_eq!(
+        add_to_array_form_of_integer(vec![2, 1, 5], 806),
+        vec![1, 0, 2, 1]
+    );
+    assert_eq!(
+        add_to_array_form_of_integer(vec![9, 9, 9, 9, 9, 9, 9, 9, 9, 9], 1),
+        vec![1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    );
+    assert_eq!(
+        add_to_array_form_of_integer(
+            vec![
+                3, 5, 8, 6, 9, 7, 8, 3, 8, 5, 4, 1, 6, 7, 4, 1, 0, 1, 7, 7, 1, 5, 3, 2, 9, 3, 4, 1,
+                0, 5, 8, 6, 9, 9, 4, 8, 7, 0, 2, 8, 2, 4, 7, 0, 4, 4, 3, 7, 2, 2
+            ],
+            142
+        ),
+        vec![
+            3, 5, 8, 6, 9, 7, 8, 3, 8, 5, 4, 1, 6, 7, 4, 1, 0, 1, 7, 7, 1, 5, 3, 2, 9, 3, 4, 1, 0,
+            5, 8, 6, 9, 9, 4, 8, 7, 0, 2, 8, 2, 4, 7, 0, 4, 4, 3, 8, 6, 4
+        ]
+    );
 }
 
 fn add_to_array_form_of_integer(num: Vec<i32>, k: i32) -> Vec<i32> {

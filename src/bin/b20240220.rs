@@ -6,15 +6,15 @@ fn main() {
     Solution::prefix_count(vec![], "at".to_string());
     Solution::distribute_candies(7, 3);
     Solution::most_visited(4, vec![1, 3, 1, 2]);
-    Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]);
+    Solution::sort_by_bits(vec![0, 1, 2, 3, 4, 5, 6, 7, 8]);
     Solution::even_odd_bit(12);
-    Solution::max_subsequence(vec![2,1,3,3], 2);
+    Solution::max_subsequence(vec![2, 1, 3, 3], 2);
     Solution::judge_circle("UD".to_string());
 }
 
 impl Solution {
     pub fn prefix_count(words: Vec<String>, pref: String) -> i32 {
-        words.iter().filter(|x| x.starts_with(&pref)).count() as i32 
+        words.iter().filter(|x| x.starts_with(&pref)).count() as i32
     }
 
     pub fn distribute_candies(candies: i32, num_people: i32) -> Vec<i32> {
@@ -91,7 +91,7 @@ impl Solution {
                 .map(|(k, _v)| (k as i32) + 1)
                 .collect();
         }
-        vec![] 
+        vec![]
     }
 
     pub fn sort_by_bits(mut arr: Vec<i32>) -> Vec<i32> {
@@ -113,13 +113,11 @@ impl Solution {
 
             let ord = a_ones.cmp(&b_ones);
             match ord {
-                std::cmp::Ordering::Equal => {
-                    a.cmp(b)
-                },
-                _ => ord
+                std::cmp::Ordering::Equal => a.cmp(b),
+                _ => ord,
             }
         });
-        arr 
+        arr
     }
 
     pub fn even_odd_bit(n: i32) -> Vec<i32> {
@@ -140,16 +138,12 @@ impl Solution {
             runner /= 2;
         }
 
-        answer 
+        answer
     }
 
     pub fn max_subsequence(nums: Vec<i32>, k: i32) -> Vec<i32> {
         // Sort it then get the largest k elements
-        let mut sorted: Vec<(i32, usize)> = nums
-            .iter()
-            .enumerate()
-            .map(|(k, v)| (*v, k))
-            .collect();
+        let mut sorted: Vec<(i32, usize)> = nums.iter().enumerate().map(|(k, v)| (*v, k)).collect();
 
         sorted.sort_by(|a, b| a.0.cmp(&b.0));
 
@@ -174,17 +168,17 @@ impl Solution {
             match c {
                 'U' => {
                     v += 1;
-                },
+                }
                 'D' => {
                     v -= 1;
-                },
+                }
                 'L' => {
                     h -= 1;
-                },
+                }
                 'R' => {
                     h += 1;
-                },
-                _ => panic!("Invalid move")
+                }
+                _ => panic!("Invalid move"),
             };
         }
 
@@ -204,9 +198,12 @@ mod tests {
 
     #[test]
     fn test_max_subsequence() {
-        assert_eq!(Solution::max_subsequence(vec![2,1,3,3], 2), vec![3, 3]);
-        assert_eq!(Solution::max_subsequence(vec![-1,-2,3,4], 3), vec![-1,3,4]);
-        assert_eq!(Solution::max_subsequence(vec![3,4,3,3], 2), vec![4,3]);
+        assert_eq!(Solution::max_subsequence(vec![2, 1, 3, 3], 2), vec![3, 3]);
+        assert_eq!(
+            Solution::max_subsequence(vec![-1, -2, 3, 4], 3),
+            vec![-1, 3, 4]
+        );
+        assert_eq!(Solution::max_subsequence(vec![3, 4, 3, 3], 2), vec![4, 3]);
     }
 
     #[test]
@@ -217,15 +214,27 @@ mod tests {
 
     #[test]
     fn test_sort_by_bits() {
-        assert_eq!(Solution::sort_by_bits(vec![0,1,2,3,4,5,6,7,8]), vec![0,1,2,4,8,3,5,6,7]);
-        assert_eq!(Solution::sort_by_bits(vec![1024,512,256,128,64,32,16,8,4,2,1]), vec![1,2,4,8,16,32,64,128,256,512,1024]);
+        assert_eq!(
+            Solution::sort_by_bits(vec![0, 1, 2, 3, 4, 5, 6, 7, 8]),
+            vec![0, 1, 2, 4, 8, 3, 5, 6, 7]
+        );
+        assert_eq!(
+            Solution::sort_by_bits(vec![1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1]),
+            vec![1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024]
+        );
     }
 
     #[test]
     fn test_most_visited() {
         assert_eq!(Solution::most_visited(4, vec![1, 3, 1, 2]), vec![1, 2]);
-        assert_eq!(Solution::most_visited(2, vec![2,1,2,1,2,1,2,1,2]), vec![2]);
-        assert_eq!(Solution::most_visited(7, vec![1,3,5,7]), vec![1,2,3,4,5,6,7]);
+        assert_eq!(
+            Solution::most_visited(2, vec![2, 1, 2, 1, 2, 1, 2, 1, 2]),
+            vec![2]
+        );
+        assert_eq!(
+            Solution::most_visited(7, vec![1, 3, 5, 7]),
+            vec![1, 2, 3, 4, 5, 6, 7]
+        );
     }
 
     #[test]
@@ -244,7 +253,8 @@ mod tests {
                     "practice".to_string(),
                     "attend".to_string(),
                 ],
-                "at".to_string()),
+                "at".to_string()
+            ),
             2,
         );
 
@@ -256,7 +266,8 @@ mod tests {
                     "loops".to_string(),
                     "success".to_string(),
                 ],
-                "code".to_string()),
+                "code".to_string()
+            ),
             0,
         );
     }

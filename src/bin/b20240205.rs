@@ -30,18 +30,15 @@ fn main() {
 // Definition for singly-linked list.
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
-  pub val: i32,
-  pub next: Option<Box<ListNode>>
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
 }
 
 impl ListNode {
-  #[inline]
-  fn new(val: i32) -> Self {
-    ListNode {
-      next: None,
-      val
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode { next: None, val }
     }
-  }
 }
 
 impl Solution {
@@ -51,14 +48,20 @@ impl Solution {
 
         while text.len() > smol_k {
             let chars: Vec<char> = text.chars().collect();
-            let digits: Vec<String> = chars.chunks(smol_k).map(|chunk| {
-                let num: i32 = chunk.iter().map(|n| {
-                    let n_str = n.to_string();
-                    let n_v: i32 = n_str.parse().unwrap();
-                    n_v
-                }).sum();
-                num.to_string()
-            }).collect();
+            let digits: Vec<String> = chars
+                .chunks(smol_k)
+                .map(|chunk| {
+                    let num: i32 = chunk
+                        .iter()
+                        .map(|n| {
+                            let n_str = n.to_string();
+                            let n_v: i32 = n_str.parse().unwrap();
+                            n_v
+                        })
+                        .sum();
+                    num.to_string()
+                })
+                .collect();
             text = digits.join("");
         }
 
@@ -79,7 +82,7 @@ impl Solution {
 
         while l <= r {
             // Find mid
-            let tmp_mid = (l  + r) / 2;
+            let tmp_mid = (l + r) / 2;
             if tmp_mid == prev_mid {
                 // We are in a loop, get out
                 let res: i32 = prev_mid as i32;
@@ -185,9 +188,7 @@ impl Solution {
         let count_keys: Vec<usize> = counts
             .iter()
             .enumerate()
-            .filter(|(k, v)| {
-                *k > 0 && **v > 0
-            })
+            .filter(|(k, v)| *k > 0 && **v > 0)
             .map(|(k, _v)| k)
             .collect();
 
@@ -267,7 +268,6 @@ struct KthLargest {
     nums: std::collections::BinaryHeap<std::cmp::Reverse<i32>>,
 }
 
-
 /**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
@@ -285,7 +285,10 @@ impl KthLargest {
             heap.pop();
         }
 
-        Self { k: k as usize, nums: heap }
+        Self {
+            k: k as usize,
+            nums: heap,
+        }
     }
 
     fn add(&mut self, val: i32) -> i32 {
@@ -305,7 +308,6 @@ struct MyHashSet {
     items: Vec<i32>,
 }
 
-
 /**
  * `&self` means the method takes an immutable reference.
  * If you need a mutable reference, change it to `&mut self` instead.
@@ -323,7 +325,12 @@ impl MyHashSet {
 
     fn remove(&mut self, key: i32) {
         if self.contains(key) {
-            let items: Vec<i32> = self.items.iter().filter(|x| x != &&key).map(|x| *x).collect();
+            let items: Vec<i32> = self
+                .items
+                .iter()
+                .filter(|x| x != &&key)
+                .map(|x| *x)
+                .collect();
             self.items = items;
         }
     }
@@ -407,10 +414,10 @@ mod tests {
 
     #[test]
     fn test_two_out_of_three_data2() {
-        let nums1: Vec<i32> = vec![2,15,10,11,14,12,14,11,9,1];
-        let nums2: Vec<i32> = vec![8,9,13,2,11,8];
-        let nums3: Vec<i32> = vec![13,5,15,7,12,7,8,3,13,15];
-        let exp: Vec<i32> = vec![2,8,9,11,12,13,15];
+        let nums1: Vec<i32> = vec![2, 15, 10, 11, 14, 12, 14, 11, 9, 1];
+        let nums2: Vec<i32> = vec![8, 9, 13, 2, 11, 8];
+        let nums3: Vec<i32> = vec![13, 5, 15, 7, 12, 7, 8, 3, 13, 15];
+        let exp: Vec<i32> = vec![2, 8, 9, 11, 12, 13, 15];
         let mut result = Solution::two_out_of_three(nums1, nums2, nums3);
         result.sort();
         assert_eq!(result, exp);
@@ -421,20 +428,26 @@ mod tests {
         assert_eq!(Solution::remove_to_equalize_freq("abcc".to_string()), true);
         assert_eq!(Solution::remove_to_equalize_freq("aazz".to_string()), false);
         assert_eq!(Solution::remove_to_equalize_freq("bac".to_string()), true);
-        assert_eq!(Solution::remove_to_equalize_freq("ddaccb".to_string()), false);
-        assert_eq!(Solution::remove_to_equalize_freq("cbccca".to_string()), false);
+        assert_eq!(
+            Solution::remove_to_equalize_freq("ddaccb".to_string()),
+            false
+        );
+        assert_eq!(
+            Solution::remove_to_equalize_freq("cbccca".to_string()),
+            false
+        );
         assert_eq!(Solution::remove_to_equalize_freq("zz".to_string()), true);
         assert_eq!(Solution::remove_to_equalize_freq("cccd".to_string()), true);
-        assert_eq!(Solution::remove_to_equalize_freq("aaaabbbbccc".to_string()), false);
+        assert_eq!(
+            Solution::remove_to_equalize_freq("aaaabbbbccc".to_string()),
+            false
+        );
         assert_eq!(Solution::remove_to_equalize_freq("abbcc".to_string()), true);
     }
 
     #[test]
     fn test_middle_node1() {
-        let n5 = ListNode {
-            next: None,
-            val: 5,
-        };
+        let n5 = ListNode { next: None, val: 5 };
         let n4 = ListNode {
             next: Some(Box::new(n5)),
             val: 4,

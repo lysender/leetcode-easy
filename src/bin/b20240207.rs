@@ -86,7 +86,7 @@ impl Solution {
             }
         }
 
-        result 
+        result
     }
 }
 
@@ -96,33 +96,18 @@ mod tests {
 
     #[test]
     fn test_transpose_data1() {
-        let input: Vec<Vec<i32>> = vec![
-            vec![1, 2, 3],
-            vec![4, 5, 6],
-            vec![7, 8, 9],
-        ];
+        let input: Vec<Vec<i32>> = vec![vec![1, 2, 3], vec![4, 5, 6], vec![7, 8, 9]];
 
-        let expected: Vec<Vec<i32>> = vec![
-            vec![1, 4, 7],
-            vec![2, 5, 8],
-            vec![3, 6, 9],
-        ];
+        let expected: Vec<Vec<i32>> = vec![vec![1, 4, 7], vec![2, 5, 8], vec![3, 6, 9]];
 
         assert_eq!(Solution::transpose(input), expected);
     }
 
     #[test]
     fn test_transpose_data2() {
-        let input: Vec<Vec<i32>> = vec![
-            vec![1, 2, 3],
-            vec![4, 5, 6],
-        ];
+        let input: Vec<Vec<i32>> = vec![vec![1, 2, 3], vec![4, 5, 6]];
 
-        let expected: Vec<Vec<i32>> = vec![
-            vec![1, 4],
-            vec![2, 5],
-            vec![3, 6],
-        ];
+        let expected: Vec<Vec<i32>> = vec![vec![1, 4], vec![2, 5], vec![3, 6]];
 
         assert_eq!(Solution::transpose(input), expected);
     }
@@ -165,22 +150,13 @@ mod tests {
         assert_eq!(
             Solution::is_prefix_string(
                 "a".to_string(),
-                vec![
-                    "aa".to_string(),
-                    "aaaa".to_string(),
-                    "banana".to_string(),
-                ]
+                vec!["aa".to_string(), "aaaa".to_string(), "banana".to_string(),]
             ),
             false,
         );
 
         assert_eq!(
-            Solution::is_prefix_string(
-                "z".to_string(),
-                vec![
-                    "z".to_string(),
-                ]
-            ),
+            Solution::is_prefix_string("z".to_string(), vec!["z".to_string(),]),
             true,
         );
 
@@ -203,9 +179,15 @@ mod tests {
 
     #[test]
     fn test_count_asterisks() {
-        assert_eq!(Solution::count_asterisks("l|*e*et|c**o|*de|".to_string()), 2);
+        assert_eq!(
+            Solution::count_asterisks("l|*e*et|c**o|*de|".to_string()),
+            2
+        );
         assert_eq!(Solution::count_asterisks("iamprogrammer".to_string()), 0);
-        assert_eq!(Solution::count_asterisks("yo|uar|e**|b|e***au|tifu|l".to_string()), 5);
+        assert_eq!(
+            Solution::count_asterisks("yo|uar|e**|b|e***au|tifu|l".to_string()),
+            5
+        );
     }
 
     #[test]
