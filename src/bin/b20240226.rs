@@ -10,6 +10,7 @@ fn main() {
         "flow".to_string(),
         "flight".to_string(),
     ]);
+    Solution::is_valid_parenthesis("()".to_string());
 }
 
 impl Solution {
@@ -119,11 +120,56 @@ impl Solution {
         }
         String::from_utf8(answer).unwrap()
     }
+
+    pub fn is_valid_parenthesis(s: String) -> bool {
+        let mut stack: Vec<char> = Vec::new();
+        let opens: Vec<char> = vec!['(', '[', '{'];
+
+        for c in s.chars() {
+            if let Some(lc) = stack.last() {
+                if opens.contains(&c) {
+                    stack.push(c);
+                    continue;
+                } else {
+                    // Check if the last char is a matching open parenthesis
+                    let is_matching_close = match lc {
+                        '(' => ')' == c,
+                        '[' => ']' == c,
+                        '{' => '}' == c,
+                        _ => false,
+                    };
+                    if is_matching_close {
+                        stack.pop();
+                        continue;
+                    }
+                }
+            } else {
+                // Only push to stack when it is a valid open
+                if opens.contains(&c) {
+                    stack.push(c);
+                    continue;
+                }
+            }
+
+            // If it reaches here, it is invalid
+            return false;
+        }
+
+        stack.len() == 0
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_is_valid_parenthesis() {
+        assert_eq!(Solution::is_valid_parenthesis("()".to_string()), true);
+        assert_eq!(Solution::is_valid_parenthesis("()[]{}".to_string()), true);
+        assert_eq!(Solution::is_valid_parenthesis("(]".to_string()), false);
+        assert_eq!(Solution::is_valid_parenthesis("]".to_string()), false);
+    }
 
     #[test]
     fn test_longest_common_prefix() {
