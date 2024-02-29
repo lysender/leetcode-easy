@@ -5,6 +5,11 @@ struct Solution {}
 fn main() {
     Solution::remove_outer_parentheses("()()".to_string());
     Solution::roman_to_int("III".to_string());
+    Solution::longest_common_prefix(vec![
+        "flower".to_string(),
+        "flow".to_string(),
+        "flight".to_string(),
+    ]);
 }
 
 impl Solution {
@@ -80,11 +85,66 @@ impl Solution {
 
         running_man
     }
+
+    pub fn longest_common_prefix(strs: Vec<String>) -> String {
+        let mut answer: Vec<u8> = Vec::new();
+
+        let map: Vec<&[u8]> = strs.iter().map(|v| v.as_bytes()).collect();
+        // Find the longest string
+        let length = map.iter().map(|v| v.len()).max().unwrap();
+
+        // Try checking each character one by one
+        let mut x = 0;
+        'outer: while x < length {
+            let mut c: u8 = 0;
+            let mut count: usize = 0;
+            for (k, row) in map.iter().enumerate() {
+                if row.len() > x {
+                    if k == 0 {
+                        c = row[x];
+                        count += 1;
+                    } else if c == row[x] {
+                        count += 1;
+                    } else {
+                        // No need to proceed
+                        break 'outer;
+                    }
+                }
+            }
+
+            if count == map.len() {
+                answer.push(c);
+            }
+            x += 1;
+        }
+        String::from_utf8(answer).unwrap()
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_longest_common_prefix() {
+        assert_eq!(
+            Solution::longest_common_prefix(vec![
+                "flower".to_string(),
+                "flow".to_string(),
+                "flight".to_string(),
+            ]),
+            "fl".to_string(),
+        );
+
+        assert_eq!(
+            Solution::longest_common_prefix(vec![
+                "dog".to_string(),
+                "racecar".to_string(),
+                "car".to_string(),
+            ]),
+            "".to_string(),
+        );
+    }
 
     #[test]
     fn test_roman_to_int() {
