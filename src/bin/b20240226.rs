@@ -1,6 +1,5 @@
 use core::panic;
-
-struct Solution {}
+use std::borrow::Borrow;
 
 fn main() {
     Solution::remove_outer_parentheses("()()".to_string());
@@ -11,7 +10,29 @@ fn main() {
         "flight".to_string(),
     ]);
     Solution::is_valid_parenthesis("()".to_string());
+
+    let list1 = Solution::to_list(vec![1, 2, 4]);
+    let list2 = Solution::to_list(vec![1, 3, 4]);
+    Solution::merge_two_lists(list1, list2);
 }
+
+#[derive(PartialEq, Eq, Debug, Clone)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode {
+            val,
+            next: None,
+        }
+    }
+}
+
+struct Solution {}
 
 impl Solution {
     pub fn remove_outer_parentheses(s: String) -> String {
@@ -157,11 +178,75 @@ impl Solution {
 
         stack.len() == 0
     }
+
+    pub fn to_vec(head: Option<Box<ListNode>>) -> Vec<i32> {
+        let mut items: Vec<i32> = Vec::new();
+
+        let mut current = head;
+        while let Some(node) = current.borrow() {
+            items.push(node.val);
+            current = node.next.clone();
+        }
+
+        items
+    }
+
+    pub fn to_list(mut items: Vec<i32>) -> Option<Box<ListNode>> {
+        // We start at the end of the list in order to build it
+        items.sort_unstable_by(|a, b| b.partial_cmp(&a).unwrap());
+        let mut current: Option<Box<ListNode>> = None;
+
+        for i in items.iter() {
+            let parent = ListNode {
+                val: *i,
+                next: current.clone(),
+            };
+            current = Some(Box::new(parent));
+        }
+        current
+    }
+
+    pub fn merge_two_lists(list1: Option<Box<ListNode>>, list2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        // Convert list to vec, combine then sort
+        let mut big_list = Self::to_vec(list1);
+        let mut big_list2 = Self::to_vec(list2);
+        println!("list1: {:?}", big_list);
+        println!("list2: {:?}", big_list2);
+        big_list.append(&mut big_list2);
+        big_list.sort_unstable_by(|a, b| b.partial_cmp(&a).unwrap());
+        println!("merged: {:?}", big_list);
+
+        Self::to_list(big_list)
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_merge_two_lists_1() {
+        let list1 = Solution::to_list(vec![1, 2, 4]);
+        let list2 = Solution::to_list(vec![1, 3, 4]);
+        let expected = Solution::to_list(vec![1, 1, 2, 3, 4, 4]);
+        assert_eq!(Solution::merge_two_lists(list1, list2), expected);
+    }
+
+    #[test]
+    fn test_merge_two_lists_2() {
+        let list1 = Solution::to_list(vec![]);
+        let list2 = Solution::to_list(vec![]);
+        let expected = Solution::to_list(vec![]);
+        assert_eq!(Solution::merge_two_lists(list1, list2), expected);
+    }
+
+    #[test]
+    fn test_merge_two_lists_3() {
+        let list1 = Solution::to_list(vec![]);
+        let list2 = Solution::to_list(vec![0]);
+        let expected = Solution::to_list(vec![0]);
+        assert_eq!(Solution::merge_two_lists(list1, list2), expected);
+    }
 
     #[test]
     fn test_is_valid_parenthesis() {
