@@ -1,5 +1,5 @@
 use core::panic;
-use std::borrow::Borrow;
+use std::{borrow::Borrow, collections::BinaryHeap};
 
 fn main() {
     Solution::remove_outer_parentheses("()()".to_string());
@@ -179,24 +179,10 @@ impl Solution {
         stack.len() == 0
     }
 
-    pub fn to_vec(head: Option<Box<ListNode>>) -> Vec<i32> {
-        let mut items: Vec<i32> = Vec::new();
-
-        let mut current = head;
-        while let Some(node) = current.borrow() {
-            items.push(node.val);
-            current = node.next.clone();
-        }
-
-        items
-    }
-
-    pub fn to_list(mut items: Vec<i32>) -> Option<Box<ListNode>> {
+    pub fn to_list(items: Vec<i32>) -> Option<Box<ListNode>> {
         // We start at the end of the list in order to build it
-        items.sort_unstable_by(|a, b| b.partial_cmp(&a).unwrap());
         let mut current: Option<Box<ListNode>> = None;
-
-        for i in items.iter() {
+        for i in items.iter().rev() {
             let parent = ListNode {
                 val: *i,
                 next: current.clone(),
@@ -207,16 +193,30 @@ impl Solution {
     }
 
     pub fn merge_two_lists(list1: Option<Box<ListNode>>, list2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        // Convert list to vec, combine then sort
-        let mut big_list = Self::to_vec(list1);
-        let mut big_list2 = Self::to_vec(list2);
-        println!("list1: {:?}", big_list);
-        println!("list2: {:?}", big_list2);
-        big_list.append(&mut big_list2);
-        big_list.sort_unstable_by(|a, b| b.partial_cmp(&a).unwrap());
-        println!("merged: {:?}", big_list);
+        // Use priority queue
+        // Push all items into the queue, then recreate it by popping off last item one by one
+        fn pusher(q: &mut BinaryHeap<i32>, head: Option<Box<ListNode>>) {
+            let mut current = head.as_ref();
+            while let Some(node) = current.borrow() {
+                q.push(node.val);
+                current = node.next.as_ref();
+            }
+        }
 
-        Self::to_list(big_list)
+        let mut queue: BinaryHeap<i32> = BinaryHeap::new();
+        pusher(&mut queue, list1);
+        pusher(&mut queue, list2);
+
+        // Recreate the list by starting at the last item to the first
+        let mut current: Option<Box<ListNode>> = None;
+        while let Some(i) = queue.pop() {
+            let parent = ListNode {
+                val: i,
+                next: current,
+            };
+            current = Some(Box::new(parent));
+        }
+        current
     }
 }
 
