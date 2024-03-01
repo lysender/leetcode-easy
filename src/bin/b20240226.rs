@@ -1,5 +1,4 @@
 use core::panic;
-use std::{borrow::Borrow, collections::BinaryHeap};
 
 fn main() {
     Solution::remove_outer_parentheses("()()".to_string());
@@ -193,25 +192,48 @@ impl Solution {
     }
 
     pub fn merge_two_lists(list1: Option<Box<ListNode>>, list2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
-        // Use priority queue
-        // Push all items into the queue, then recreate it by popping off last item one by one
-        fn pusher(q: &mut BinaryHeap<i32>, head: Option<Box<ListNode>>) {
-            let mut current = head.as_ref();
-            while let Some(node) = current.borrow() {
-                q.push(node.val);
-                current = node.next.as_ref();
+        // Use two pointers to collect numbers in ascending order
+        let mut cursor1 = list1.as_ref();
+        let mut cursor2 = list2.as_ref();
+
+        let mut items: Vec<i32> = Vec::new();
+
+        loop {
+            match (cursor1, cursor2) {
+                (None, None) => {
+                    // Exhausted the list
+                    break;
+                }
+                (Some(c1_node), Some(c2_node)) => {
+                    // Both items are present, see which value is lesser than the other
+                    if c1_node.val < c2_node.val {
+                        // c1 is smaller, push it and move cursor down
+                        // no changes for c2
+                        items.push(c1_node.val);
+                        cursor1 = c1_node.next.as_ref();
+                    } else {
+                        // c2 is either equal or smaller, push it and move cursor down
+                        // no changes for c1
+                        items.push(c2_node.val);
+                        cursor2 = c2_node.next.as_ref();
+                    }
+                }
+                (Some(c1_node), None) => {
+                    items.push(c1_node.val);
+                    cursor1 = c1_node.next.as_ref();
+                }
+                (None, Some(c2_node)) => {
+                    items.push(c2_node.val);
+                    cursor2 = c2_node.next.as_ref();
+                }
             }
         }
 
-        let mut queue: BinaryHeap<i32> = BinaryHeap::new();
-        pusher(&mut queue, list1);
-        pusher(&mut queue, list2);
-
         // Recreate the list by starting at the last item to the first
         let mut current: Option<Box<ListNode>> = None;
-        while let Some(i) = queue.pop() {
+        for i in items.iter().rev() {
             let parent = ListNode {
-                val: i,
+                val: *i,
                 next: current,
             };
             current = Some(Box::new(parent));
