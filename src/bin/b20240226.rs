@@ -24,10 +24,7 @@ pub struct ListNode {
 impl ListNode {
     #[inline]
     fn new(val: i32) -> Self {
-        ListNode {
-            val,
-            next: None,
-        }
+        ListNode { val, next: None }
     }
 }
 
@@ -191,7 +188,10 @@ impl Solution {
         current
     }
 
-    pub fn merge_two_lists(list1: Option<Box<ListNode>>, list2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+    pub fn merge_two_lists(
+        list1: Option<Box<ListNode>>,
+        list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
         // Use two pointers to collect numbers in ascending order
         let mut cursor1 = list1.as_ref();
         let mut cursor2 = list2.as_ref();
