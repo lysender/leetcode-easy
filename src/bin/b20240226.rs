@@ -10,6 +10,8 @@ fn main() {
     ]);
     Solution::is_valid_parenthesis("()".to_string());
 
+    let node = ListNode::new(0);
+    println!("{:?}", node);
     let list1 = Solution::to_list(vec![1, 2, 4]);
     let list2 = Solution::to_list(vec![1, 3, 4]);
     Solution::merge_two_lists(list1, list2);

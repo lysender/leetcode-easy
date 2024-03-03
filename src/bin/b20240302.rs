@@ -4,6 +4,8 @@ use std::cell::RefCell;
 fn main() {
     Solution::search_insert(vec![1, 3, 5, 6], 5);
     Solution::climb_stairs(2);
+    Solution::inorder_traversal_recursive(None);
+    Solution::inorder_traversal(None);
 }
 // Definition for a binary tree node.
 #[derive(Debug, PartialEq, Eq)]
@@ -88,26 +90,56 @@ impl Solution {
         current
     }
 
-    pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+    pub fn inorder_traversal_recursive(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
         // Use a recursive solution for now
         fn walk(node: &Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
             let mut items: Vec<i32> = Vec::new();
             if let Some(node_rc) = node {
                 let node_val = node_rc.borrow();
-                if node_val.left.is_some() {
-                    let mut left_items = walk(&node_val.left);
-                    items.append(&mut left_items);
-                }
+
+                let mut left_items = walk(&node_val.left);
+                items.append(&mut left_items);
+
                 items.push(node_val.val);
-                if node_val.right.is_some() {
-                    let mut right_items = walk(&node_val.right);
-                    items.append(&mut right_items);
-                }
+
+                let mut right_items = walk(&node_val.right);
+                items.append(&mut right_items);
             }
             items
         }
 
         walk(&root)
+    }
+
+    pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        // Use an iterative solution, which uses a stack
+        // A stack where the recursive uses btw, so is it really more efficient?
+        let mut answer: Vec<i32> = Vec::new();
+        // Tupple of node and a flag whether to push to answer or not
+        let mut stack: Vec<(Option<Rc<RefCell<TreeNode>>>, bool)> = vec![(root, false)];
+
+        while let Some(item) = stack.pop() {
+            let (node_opt, to_push) = item;
+            if let Some(node) = node_opt {
+                let node_rc = node.borrow();
+                if to_push {
+                    // Either we go up or we go right
+                    answer.push(node_rc.val);
+
+                    if let Some(right) = node_rc.right.clone() {
+                        // We go right
+                        stack.push((Some(right), false));
+                    }
+                } else {
+                    // Push item back to stack but mark it as to push
+                    stack.push((Some(node.clone()), true));
+                    // Then we go left
+                    stack.push((node_rc.left.clone(), false));
+                }
+            }
+        }
+
+        answer
     }
 }
 
@@ -129,7 +161,7 @@ mod tests {
             right: Some(Rc::new(RefCell::new(l1_right))),
         };
         assert_eq!(
-            Solution::inorder_traversal(Some(Rc::new(RefCell::new(root)))),
+            Solution::inorder_traversal_recursive(Some(Rc::new(RefCell::new(root)))),
             vec![1, 3, 2]
         );
     }
@@ -137,13 +169,49 @@ mod tests {
     #[test]
     fn test_inorder_traversal_2() {
         assert_eq!(
-            Solution::inorder_traversal(None),
+            Solution::inorder_traversal_recursive(None),
             vec![]
         );
     }
 
     #[test]
     fn test_inorder_traversal_3() {
+        let root = TreeNode::new(1);
+        assert_eq!(
+            Solution::inorder_traversal_recursive(Some(Rc::new(RefCell::new(root)))),
+            vec![1]
+        );
+    }
+
+    #[test]
+    fn test_inorder_traversal_4() {
+        let l2_left = TreeNode::new(3);
+        let l1_right = TreeNode {
+            val: 2,
+            left: Some(Rc::new(RefCell::new(l2_left))),
+            right: None,
+        };
+        let root = TreeNode {
+            val: 1,
+            left: None,
+            right: Some(Rc::new(RefCell::new(l1_right))),
+        };
+        assert_eq!(
+            Solution::inorder_traversal(Some(Rc::new(RefCell::new(root)))),
+            vec![1, 3, 2]
+        );
+    }
+
+    #[test]
+    fn test_inorder_traversal_5() {
+        assert_eq!(
+            Solution::inorder_traversal(None),
+            vec![]
+        );
+    }
+
+    #[test]
+    fn test_inorder_traversal_6() {
         let root = TreeNode::new(1);
         assert_eq!(
             Solution::inorder_traversal(Some(Rc::new(RefCell::new(root)))),
