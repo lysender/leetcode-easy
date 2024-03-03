@@ -1,5 +1,5 @@
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 fn main() {
     Solution::search_insert(vec![1, 3, 5, 6], 5);
@@ -50,16 +50,16 @@ impl Solution {
             if nums[mid] == target {
                 // Found it
                 return mid as i32;
+            }
+
+            if nums[mid] > target {
+                // Move lower
+                r = mid - 1;
+                target_index = Some(r);
             } else {
-                if nums[mid] > target {
-                    // Move lower
-                    r = mid - 1;
-                    target_index = Some(r);
-                } else {
-                    // Move higher
-                    l = mid + 1;
-                    target_index = Some(l);
-                }
+                // Move higher
+                l = mid + 1;
+                target_index = Some(l);
             }
         }
 
@@ -69,12 +69,12 @@ impl Solution {
                 nums, target, ideal_index
             );
             if nums[ideal_index] < target {
-                return ideal_index as i32 + 1;
+                ideal_index as i32 + 1
             } else {
-                return ideal_index as i32;
+                ideal_index as i32
             }
         } else {
-            return 0;
+            0
         }
     }
 
@@ -168,10 +168,7 @@ mod tests {
 
     #[test]
     fn test_inorder_traversal_2() {
-        assert_eq!(
-            Solution::inorder_traversal_recursive(None),
-            vec![]
-        );
+        assert_eq!(Solution::inorder_traversal_recursive(None), vec![]);
     }
 
     #[test]
@@ -204,10 +201,7 @@ mod tests {
 
     #[test]
     fn test_inorder_traversal_5() {
-        assert_eq!(
-            Solution::inorder_traversal(None),
-            vec![]
-        );
+        assert_eq!(Solution::inorder_traversal(None), vec![]);
     }
 
     #[test]
@@ -230,7 +224,7 @@ mod tests {
 
     #[test]
     fn test_search_insert() {
-        assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 5), 2);
+        assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 5,), 2,);
         assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 2), 1);
         assert_eq!(Solution::search_insert(vec![1, 3, 5, 6], 7), 4);
         assert_eq!(Solution::search_insert(vec![1, 3], 2), 1);
