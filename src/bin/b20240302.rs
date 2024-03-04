@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::collections::VecDeque;
 use std::rc::Rc;
 
 fn main() {
@@ -6,6 +7,7 @@ fn main() {
     Solution::climb_stairs(2);
     Solution::inorder_traversal_recursive(None);
     Solution::inorder_traversal(None);
+    Solution::is_symmetric(None);
 }
 // Definition for a binary tree node.
 #[derive(Debug, PartialEq, Eq)]
@@ -64,10 +66,6 @@ impl Solution {
         }
 
         if let Some(ideal_index) = target_index {
-            println!(
-                "nums: {:?}, target: {}, ideal_index: {}",
-                nums, target, ideal_index
-            );
             if nums[ideal_index] < target {
                 ideal_index as i32 + 1
             } else {
@@ -141,11 +139,194 @@ impl Solution {
 
         answer
     }
+
+    pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        // Just use top to bottom traversal where
+        // top left is left leaning and
+        // right is right leaning
+        // then compare the result at the end
+
+        // Use a top down traversal, not sure how it is called
+        fn walk(root_node: Option<Rc<RefCell<TreeNode>>>, left_lean: bool) -> Vec<i32> {
+            // This code is based on previous in order traversal solution
+            let mut result: Vec<i32> = Vec::new();
+            let mut queue: VecDeque<Option<Rc<RefCell<TreeNode>>>> = VecDeque::from([root_node]);
+
+            while let Some(item) = queue.pop_front() {
+                if let Some(node) = item {
+                    let node_rc = node.borrow();
+                    result.push(node_rc.val);
+
+                    if left_lean {
+                        // Do left then right
+                        queue.push_back(node_rc.left.clone());
+                        queue.push_back(node_rc.right.clone());
+                    } else {
+                        // Do right then left
+                        queue.push_back(node_rc.right.clone());
+                        queue.push_back(node_rc.left.clone());
+                    }
+                } else {
+                    // Add None value to ensure tree is represented correctly
+                    result.push(-101);
+                }
+            }
+
+            result
+        }
+
+        if let Some(root_node) = root {
+            let root_rc = root_node.borrow();
+            let left = walk(root_rc.left.clone(), true);
+            let right = walk(root_rc.right.clone(), false);
+            return left == right;
+        }
+
+        true
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_is_symmetric_1() {
+        let l1_l = TreeNode {
+            val: 2,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(3)))),
+            right: Some(Rc::new(RefCell::new(TreeNode::new(4)))),
+        };
+        let l1_r = TreeNode {
+            val: 2,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(4)))),
+            right: Some(Rc::new(RefCell::new(TreeNode::new(3)))),
+        };
+        let root = TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(l1_l))),
+            right: Some(Rc::new(RefCell::new(l1_r))),
+        };
+        assert_eq!(
+            Solution::is_symmetric(Some(Rc::new(RefCell::new(root)))),
+            true
+        );
+    }
+
+    #[test]
+    fn test_is_symmetric_2() {
+        let l1_l = TreeNode {
+            val: 2,
+            left: None,
+            right: Some(Rc::new(RefCell::new(TreeNode::new(3)))),
+        };
+        let l1_r = TreeNode {
+            val: 2,
+            left: None,
+            right: Some(Rc::new(RefCell::new(TreeNode::new(3)))),
+        };
+        let root = TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(l1_l))),
+            right: Some(Rc::new(RefCell::new(l1_r))),
+        };
+        assert_eq!(
+            Solution::is_symmetric(Some(Rc::new(RefCell::new(root)))),
+            false
+        );
+    }
+
+    #[test]
+    fn test_is_symmetric_3() {
+        // [1,2,2,2,null,2]
+        //       1
+        //   2       2
+        // 2   x   2
+        let l1_l = TreeNode {
+            val: 2,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(2)))),
+            right: None,
+        };
+        let l1_r = TreeNode {
+            val: 2,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(2)))),
+            right: None,
+        };
+        let root = TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(l1_l))),
+            right: Some(Rc::new(RefCell::new(l1_r))),
+        };
+        assert_eq!(
+            Solution::is_symmetric(Some(Rc::new(RefCell::new(root)))),
+            false
+        );
+    }
+
+    #[test]
+    fn test_is_symmetric_4() {
+        // [5,4,1,null,1,null,4,2,null,2,null]
+        //                   5
+        //           4               1
+        //        x     1         x     4
+        //            2   x           2   x
+        let l2_lr = TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(2)))),
+            right: None,
+        };
+        let l2_rr = TreeNode {
+            val: 4,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(2)))),
+            right: None,
+        };
+        let l1_l = TreeNode {
+            val: 4,
+            left: None,
+            right: Some(Rc::new(RefCell::new(l2_lr))),
+        };
+        let l1_r = TreeNode {
+            val: 1,
+            left: None,
+            right: Some(Rc::new(RefCell::new(l2_rr))),
+        };
+        let root = TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(l1_l))),
+            right: Some(Rc::new(RefCell::new(l1_r))),
+        };
+        assert_eq!(
+            Solution::is_symmetric(Some(Rc::new(RefCell::new(root)))),
+            false
+        );
+    }
+
+    #[test]
+    fn test_is_symmetric_5() {
+        // [2,3,3,4,5,null,4]
+        //                   2
+        //           3               3
+        //        4     5         x     4
+        let l1_l = TreeNode {
+            val: 3,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(4)))),
+            right: Some(Rc::new(RefCell::new(TreeNode::new(5)))),
+        };
+        let l1_r = TreeNode {
+            val: 3,
+            left: None,
+            right: Some(Rc::new(RefCell::new(TreeNode::new(4)))),
+        };
+        let root = TreeNode {
+            val: 1,
+            left: Some(Rc::new(RefCell::new(l1_l))),
+            right: Some(Rc::new(RefCell::new(l1_r))),
+        };
+        assert_eq!(
+            Solution::is_symmetric(Some(Rc::new(RefCell::new(root)))),
+            false
+        );
+    }
 
     #[test]
     fn test_inorder_traversal_1() {
