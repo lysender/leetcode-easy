@@ -1,3 +1,5 @@
+use leetcode_easy::ListNode;
+
 struct Solution {}
 
 fn main() {
@@ -26,19 +28,6 @@ fn main() {
     Solution::two_out_of_three(vec![], vec![], vec![]);
     Solution::remove_to_equalize_freq("foo".to_string());
     Solution::middle_node(Some(Box::new(ListNode::new(1))));
-}
-// Definition for singly-linked list.
-#[derive(PartialEq, Eq, Clone, Debug)]
-pub struct ListNode {
-    pub val: i32,
-    pub next: Option<Box<ListNode>>,
-}
-
-impl ListNode {
-    #[inline]
-    fn new(val: i32) -> Self {
-        ListNode { next: None, val }
-    }
 }
 
 impl Solution {

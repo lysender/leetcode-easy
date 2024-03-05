@@ -32,10 +32,10 @@ impl Solution {
                     answer[k as usize] += x;
                     x = 0;
                     break;
-                } else {
-                    x = remaining;
-                    answer[k as usize] += share;
                 }
+
+                x = remaining;
+                answer[k as usize] += share;
             }
             row += 1;
         }

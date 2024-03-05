@@ -84,5 +84,5 @@ fn add_to_array_form_of_integer(num: Vec<i32>, k: i32) -> Vec<i32> {
 
     // Reverse it back
     result.reverse();
-    return result;
+    result
 }

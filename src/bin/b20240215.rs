@@ -80,7 +80,7 @@ impl Solution {
 
         // println!("{:?}", digits);
 
-        return digits[0] == 1;
+        digits[0] == 1
     }
 
     pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
@@ -124,7 +124,7 @@ impl Solution {
             half_life /= 2;
         }
 
-        return nums[0];
+        nums[0]
     }
 
     pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {

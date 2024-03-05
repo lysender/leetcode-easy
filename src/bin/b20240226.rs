@@ -1,5 +1,7 @@
 use core::panic;
 
+use leetcode_easy::ListNode;
+
 fn main() {
     Solution::remove_outer_parentheses("()()".to_string());
     Solution::roman_to_int("III".to_string());
@@ -15,19 +17,6 @@ fn main() {
     let list1 = Solution::to_list(vec![1, 2, 4]);
     let list2 = Solution::to_list(vec![1, 3, 4]);
     Solution::merge_two_lists(list1, list2);
-}
-
-#[derive(PartialEq, Eq, Debug, Clone)]
-pub struct ListNode {
-    pub val: i32,
-    pub next: Option<Box<ListNode>>,
-}
-
-impl ListNode {
-    #[inline]
-    fn new(val: i32) -> Self {
-        ListNode { val, next: None }
-    }
 }
 
 struct Solution {}
@@ -149,18 +138,18 @@ impl Solution {
                 if opens.contains(&c) {
                     stack.push(c);
                     continue;
-                } else {
-                    // Check if the last char is a matching open parenthesis
-                    let is_matching_close = match lc {
-                        '(' => ')' == c,
-                        '[' => ']' == c,
-                        '{' => '}' == c,
-                        _ => false,
-                    };
-                    if is_matching_close {
-                        stack.pop();
-                        continue;
-                    }
+                }
+
+                // Check if the last char is a matching open parenthesis
+                let is_matching_close = match lc {
+                    '(' => ')' == c,
+                    '[' => ']' == c,
+                    '{' => '}' == c,
+                    _ => false,
+                };
+                if is_matching_close {
+                    stack.pop();
+                    continue;
                 }
             } else {
                 // Only push to stack when it is a valid open
