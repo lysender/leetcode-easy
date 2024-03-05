@@ -10,6 +10,7 @@ fn main() {
     Solution::inorder_traversal_recursive(None);
     Solution::inorder_traversal(None);
     Solution::is_symmetric(None);
+    Solution::max_depth(None);
 }
 
 struct Solution {}
@@ -107,11 +108,7 @@ impl Solution {
                 if to_push {
                     // Either we go up or we go right
                     answer.push(node_rc.val);
-
-                    if let Some(right) = node_rc.right.clone() {
-                        // We go right
-                        stack.push((Some(right), false));
-                    }
+                    stack.push((node_rc.right.clone(), false));
                 } else {
                     // Push item back to stack but mark it as to push
                     stack.push((Some(node.clone()), true));
@@ -168,11 +165,57 @@ impl Solution {
 
         true
     }
+
+    pub fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn the_depth(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            match node {
+                Some(node_val) => {
+                    // We got 1 level plus all the levels down
+                    let node_rc = node_val.borrow();
+                    1 + the_depth(&node_rc.left).max(the_depth(&node_rc.right))
+                }
+                None => 0,
+            }
+        }
+        the_depth(&root)
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_max_depth_1() {
+        // [3,9,20,null,null,15,7]
+        let l1_l = TreeNode {
+            val: 9,
+            left: None,
+            right: None,
+        };
+        let l1_r = TreeNode {
+            val: 20,
+            left: Some(Rc::new(RefCell::new(TreeNode::new(15)))),
+            right: Some(Rc::new(RefCell::new(TreeNode::new(7)))),
+        };
+        let root = TreeNode {
+            val: 3,
+            left: Some(Rc::new(RefCell::new(l1_l))),
+            right: Some(Rc::new(RefCell::new(l1_r))),
+        };
+        assert_eq!(Solution::max_depth(Some(Rc::new(RefCell::new(root)))), 3,);
+    }
+
+    #[test]
+    fn test_max_depth_2() {
+        // [1,null,2]
+        let root = TreeNode {
+            val: 1,
+            left: None,
+            right: Some(Rc::new(RefCell::new(TreeNode::new(2)))),
+        };
+        assert_eq!(Solution::max_depth(Some(Rc::new(RefCell::new(root)))), 2,);
+    }
 
     #[test]
     fn test_is_symmetric_1() {
