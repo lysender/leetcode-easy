@@ -1,6 +1,7 @@
 fn main() {
     Solution::generate_pascal_triangle(5);
     Solution::max_profit(vec![7, 6, 4, 3, 1]);
+    Solution::single_number(vec![1]);
 }
 
 struct Solution {}
@@ -43,11 +44,37 @@ impl Solution {
 
         profit
     }
+
+    pub fn single_number(nums: Vec<i32>) -> i32 {
+        let mut map: Vec<i32> = vec![0; 60000];
+        let mut indexes: Vec<usize> = Vec::with_capacity(nums.len());
+        for i in nums.iter() {
+            let new_index: usize = *i as usize + 30000;
+            map[new_index] += 1;
+
+            if map[new_index] == 1 {
+                indexes.push(new_index);
+            }
+        }
+        for i in indexes.iter() {
+            if map[*i] == 1 {
+                return (*i - 30000) as i32;
+            }
+        }
+        0
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_single_number() {
+        assert_eq!(Solution::single_number(vec![2, 2, 1]), 1);
+        assert_eq!(Solution::single_number(vec![4, 1, 2, 1, 2]), 4);
+        assert_eq!(Solution::single_number(vec![1]), 1);
+    }
 
     #[test]
     fn test_max_profit() {
