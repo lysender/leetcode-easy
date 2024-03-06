@@ -2,6 +2,7 @@ fn main() {
     Solution::generate_pascal_triangle(5);
     Solution::max_profit(vec![7, 6, 4, 3, 1]);
     Solution::single_number(vec![1]);
+    Solution::single_number_xor(vec![1]);
 }
 
 struct Solution {}
@@ -63,11 +64,29 @@ impl Solution {
         }
         0
     }
+
+    pub fn single_number_xor(nums: Vec<i32>) -> i32 {
+        // Copied/stolen (same thing) solution from others
+        // The idea is that if you XOR a value with itself, it will cancel each other, ie: 0
+        // The good thing is that the XOR effect basically strips the value out of the other value
+        let mut x: i32 = 0;
+        for i in nums.iter() {
+            x = x ^ i;
+        }
+        x
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_single_number_xor() {
+        assert_eq!(Solution::single_number_xor(vec![2, 2, 1]), 1);
+        assert_eq!(Solution::single_number_xor(vec![4, 1, 2, 1, 2]), 4);
+        assert_eq!(Solution::single_number_xor(vec![1]), 1);
+    }
 
     #[test]
     fn test_single_number() {
