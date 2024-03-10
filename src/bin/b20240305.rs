@@ -3,6 +3,7 @@ fn main() {
     Solution::max_profit(vec![7, 6, 4, 3, 1]);
     Solution::single_number(vec![1]);
     Solution::single_number_xor(vec![1]);
+    Solution::majority_element(vec![3, 2, 3]);
 }
 
 struct Solution {}
@@ -75,11 +76,38 @@ impl Solution {
         }
         x
     }
+
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        // Track each candidate and increment or decrement count
+        // or switch candidate if it repeats again
+        let mut x: (i32, i32) = (nums[0], 0);
+        for i in nums.iter() {
+            if *i == x.0 {
+                // Increate candidate count
+                x.1 += 1;
+            } else {
+                if x.1 == 0 {
+                    // Switch candiate
+                    x = (*i, 1);
+                } else {
+                    // Decrease candiate count
+                    x.1 -= 1;
+                }
+            }
+        }
+        x.0
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_majority_element() {
+        assert_eq!(Solution::majority_element(vec![3, 2, 3]), 3);
+        assert_eq!(Solution::majority_element(vec![2, 2, 1, 1, 1, 2, 2]), 2);
+    }
 
     #[test]
     fn test_single_number_xor() {
