@@ -1,9 +1,12 @@
+use leetcode_easy::ListNode;
+
 fn main() {
     Solution::generate_pascal_triangle(5);
     Solution::max_profit(vec![7, 6, 4, 3, 1]);
     Solution::single_number(vec![1]);
     Solution::single_number_xor(vec![1]);
     Solution::majority_element(vec![3, 2, 3]);
+    Solution::reverse_list(None);
 }
 
 struct Solution {}
@@ -103,11 +106,61 @@ impl Solution {
         }
         -1
     }
+
+    pub fn reverse_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut current = &head;
+        let mut prev: Option<Box<ListNode>> = None;
+
+        while let Some(node) = current {
+            if prev.is_some() {
+                let next = ListNode {
+                    val: node.val,
+                    next: prev,
+                };
+                prev = Some(Box::new(next));
+                current = &node.next;
+            } else {
+                // Tail
+                let mut next = ListNode::new(node.val);
+                next.next = prev;
+                prev = Some(Box::new(next));
+                current = &node.next;
+            }
+        }
+        prev
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_reverse_list_1() {
+        let i5 = ListNode::new(5);
+        let i4 = ListNode {
+            val: 4,
+            next: Some(Box::new(i5)),
+        };
+        let i3 = ListNode {
+            val: 3,
+            next: Some(Box::new(i4)),
+        };
+        let i2 = ListNode {
+            val: 2,
+            next: Some(Box::new(i3)),
+        };
+        let i1 = ListNode {
+            val: 1,
+            next: Some(Box::new(i2)),
+        };
+
+        let new_head = Solution::reverse_list(Some(Box::new(i1)));
+        assert_eq!(new_head.is_some(), true);
+        if let Some(new_head_rc) = new_head {
+            assert_eq!(new_head_rc.val, 5);
+        }
+    }
 
     #[test]
     fn test_majority_element() {
