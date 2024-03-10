@@ -80,22 +80,28 @@ impl Solution {
     pub fn majority_element(nums: Vec<i32>) -> i32 {
         // Track each candidate and increment or decrement count
         // or switch candidate if it repeats again
-        let mut x: (i32, i32) = (nums[0], 0);
+        let mut candidate: (i32, i32) = (nums[0], 0);
         for i in nums.iter() {
-            if *i == x.0 {
+            if *i == candidate.0 {
                 // Increate candidate count
-                x.1 += 1;
+                candidate.1 += 1;
             } else {
-                if x.1 == 0 {
+                if candidate.1 == 0 {
                     // Switch candiate
-                    x = (*i, 1);
+                    candidate = (*i, 1);
                 } else {
                     // Decrease candiate count
-                    x.1 -= 1;
+                    candidate.1 -= 1;
                 }
             }
         }
-        x.0
+
+        // Verify if candidate actually occurs n/2 times
+        let count = nums.iter().filter(|x| **x == candidate.0).count();
+        if count > (nums.len() / 2) {
+            return candidate.0;
+        }
+        -1
     }
 }
 
@@ -107,6 +113,7 @@ mod tests {
     fn test_majority_element() {
         assert_eq!(Solution::majority_element(vec![3, 2, 3]), 3);
         assert_eq!(Solution::majority_element(vec![2, 2, 1, 1, 1, 2, 2]), 2);
+        assert_eq!(Solution::majority_element(vec![1, 2, 3]), -1);
     }
 
     #[test]
