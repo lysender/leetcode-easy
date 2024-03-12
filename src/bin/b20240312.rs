@@ -1,11 +1,12 @@
 use std::{cell::RefCell, rc::Rc};
 
-use leetcode_easy::TreeNode;
+use leetcode_easy::{ListNode, TreeNode};
 
 struct Solution {}
 
 fn main() {
     Solution::invert_tree(None);
+    Solution::is_palindrome(None);
 }
 
 impl Solution {
@@ -26,13 +27,49 @@ impl Solution {
         }
         invert_tree_inner(root)
     }
+
+    pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {
+        // Collect items into an array first
+        let mut items: Vec<i32> = Vec::new();
+        let mut current = &head;
+        while let Some(node) = current {
+            items.push(node.val);
+            current = &node.next;
+        }
+
+        // Use two pointer technique to compare low and high cursors
+        let mut low: usize = 0;
+        let mut high: usize = items.len() - 1;
+
+        // Don't need to reach both end, meeting at the middle is enough
+        while low < high {
+            if items[low] != items[high] {
+                return false;
+            }
+            low += 1;
+            high -= 1;
+        }
+        true
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use leetcode_easy::{create_tree, flatten_tree};
+    use leetcode_easy::{create_list, create_tree, flatten_tree};
 
     use super::*;
+
+    #[test]
+    fn test_is_palindrome_1() {
+        let head = create_list(vec![1, 2, 2, 1]);
+        assert_eq!(Solution::is_palindrome(head), true);
+    }
+
+    #[test]
+    fn test_is_palindrome_2() {
+        let head = create_list(vec![1, 2]);
+        assert_eq!(Solution::is_palindrome(head), false);
+    }
 
     #[test]
     fn test_invert_tree_1() {

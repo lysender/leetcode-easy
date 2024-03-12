@@ -2,6 +2,30 @@ use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
 
+pub fn create_list(items: Vec<i32>) -> Option<Box<ListNode>> {
+    let mut prev: Option<Box<ListNode>> = None;
+
+    for i in items.iter().rev() {
+        let node = ListNode {
+            val: *i,
+            next: prev,
+        };
+        prev = Some(Box::new(node));
+    }
+    prev
+}
+
+pub fn list_to_vec(head: Option<Box<ListNode>>) -> Vec<i32> {
+    let mut items: Vec<i32> = Vec::new();
+    let mut current = &head;
+
+    while let Some(node) = current {
+        items.push(node.val);
+        current = &node.next;
+    }
+    items
+}
+
 pub fn create_tree(items: Vec<Option<i32>>) -> Option<Rc<RefCell<TreeNode>>> {
     if items.len() == 0 {
         return None;
@@ -92,7 +116,7 @@ impl ListNode {
 
 #[cfg(test)]
 mod tests {
-    use crate::{create_tree, flatten_tree};
+    use crate::{create_list, create_tree, flatten_tree, list_to_vec};
 
     #[test]
     fn test_tree() {
@@ -107,5 +131,12 @@ mod tests {
         ];
         let root = create_tree(input.clone());
         assert_eq!(flatten_tree(root), input);
+    }
+
+    #[test]
+    fn test_list() {
+        let input = vec![1, 2, 3, 4, 5];
+        let head = create_list(input.clone());
+        assert_eq!(list_to_vec(head), input);
     }
 }
