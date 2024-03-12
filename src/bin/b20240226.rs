@@ -1,6 +1,6 @@
 use core::panic;
 
-use leetcode_easy::ListNode;
+use leetcode_easy::{create_list, ListNode};
 
 fn main() {
     Solution::remove_outer_parentheses("()()".to_string());
@@ -14,8 +14,8 @@ fn main() {
 
     let node = ListNode::new(0);
     println!("{:?}", node);
-    let list1 = Solution::to_list(vec![1, 2, 4]);
-    let list2 = Solution::to_list(vec![1, 3, 4]);
+    let list1 = create_list(vec![1, 2, 4]);
+    let list2 = create_list(vec![1, 3, 4]);
     Solution::merge_two_lists(list1, list2);
 }
 
@@ -166,19 +166,6 @@ impl Solution {
         stack.len() == 0
     }
 
-    pub fn to_list(items: Vec<i32>) -> Option<Box<ListNode>> {
-        // We start at the end of the list in order to build it
-        let mut current: Option<Box<ListNode>> = None;
-        for i in items.iter().rev() {
-            let parent = ListNode {
-                val: *i,
-                next: current.clone(),
-            };
-            current = Some(Box::new(parent));
-        }
-        current
-    }
-
     pub fn merge_two_lists(
         list1: Option<Box<ListNode>>,
         list2: Option<Box<ListNode>>,
@@ -235,29 +222,31 @@ impl Solution {
 
 #[cfg(test)]
 mod tests {
+    use leetcode_easy::create_list;
+
     use super::*;
 
     #[test]
     fn test_merge_two_lists_1() {
-        let list1 = Solution::to_list(vec![1, 2, 4]);
-        let list2 = Solution::to_list(vec![1, 3, 4]);
-        let expected = Solution::to_list(vec![1, 1, 2, 3, 4, 4]);
+        let list1 = create_list(vec![1, 2, 4]);
+        let list2 = create_list(vec![1, 3, 4]);
+        let expected = create_list(vec![1, 1, 2, 3, 4, 4]);
         assert_eq!(Solution::merge_two_lists(list1, list2), expected);
     }
 
     #[test]
     fn test_merge_two_lists_2() {
-        let list1 = Solution::to_list(vec![]);
-        let list2 = Solution::to_list(vec![]);
-        let expected = Solution::to_list(vec![]);
+        let list1 = create_list(vec![]);
+        let list2 = create_list(vec![]);
+        let expected = create_list(vec![]);
         assert_eq!(Solution::merge_two_lists(list1, list2), expected);
     }
 
     #[test]
     fn test_merge_two_lists_3() {
-        let list1 = Solution::to_list(vec![]);
-        let list2 = Solution::to_list(vec![0]);
-        let expected = Solution::to_list(vec![0]);
+        let list1 = create_list(vec![]);
+        let list2 = create_list(vec![0]);
+        let expected = create_list(vec![0]);
         assert_eq!(Solution::merge_two_lists(list1, list2), expected);
     }
 

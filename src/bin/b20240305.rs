@@ -133,29 +133,14 @@ impl Solution {
 
 #[cfg(test)]
 mod tests {
+    use leetcode_easy::create_list;
+
     use super::*;
 
     #[test]
     fn test_reverse_list_1() {
-        let i5 = ListNode::new(5);
-        let i4 = ListNode {
-            val: 4,
-            next: Some(Box::new(i5)),
-        };
-        let i3 = ListNode {
-            val: 3,
-            next: Some(Box::new(i4)),
-        };
-        let i2 = ListNode {
-            val: 2,
-            next: Some(Box::new(i3)),
-        };
-        let i1 = ListNode {
-            val: 1,
-            next: Some(Box::new(i2)),
-        };
-
-        let new_head = Solution::reverse_list(Some(Box::new(i1)));
+        let head = create_list(vec![1, 2, 3, 4, 5]);
+        let new_head = Solution::reverse_list(head);
         assert_eq!(new_head.is_some(), true);
         if let Some(new_head_rc) = new_head {
             assert_eq!(new_head_rc.val, 5);

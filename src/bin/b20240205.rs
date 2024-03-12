@@ -99,7 +99,7 @@ impl Solution {
         }
 
         // If we reached this far, we just need to choose the lower value
-        return l as i32;
+        l as i32
     }
 
     pub fn remove_duplicates(s: String) -> String {
@@ -181,10 +181,6 @@ impl Solution {
             .map(|(k, _v)| k)
             .collect();
 
-        // println!("{:?}", counts);
-        // println!("{:?}", count_keys);
-        // println!("{:?}", word);
-
         // To allow equalizing, any the following must be true:
         // one count and count == 1
         // one count and count frequency == 1
@@ -223,7 +219,7 @@ impl Solution {
         }
 
         // Will not equalize
-        return false;
+        false
     }
 
     pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
@@ -239,7 +235,6 @@ impl Solution {
             current = item.next;
         }
 
-        // println!("Len: {}", length);
         if length == 0 {
             return None;
         }
@@ -331,6 +326,8 @@ impl MyHashSet {
 
 #[cfg(test)]
 mod tests {
+    use leetcode_easy::create_list;
+
     use super::*;
 
     #[test]
@@ -436,25 +433,8 @@ mod tests {
 
     #[test]
     fn test_middle_node1() {
-        let n5 = ListNode { next: None, val: 5 };
-        let n4 = ListNode {
-            next: Some(Box::new(n5)),
-            val: 4,
-        };
-        let n3 = ListNode {
-            next: Some(Box::new(n4)),
-            val: 3,
-        };
-        let n2 = ListNode {
-            next: Some(Box::new(n3)),
-            val: 2,
-        };
-        let n1 = ListNode {
-            next: Some(Box::new(n2)),
-            val: 1,
-        };
-
-        let mid = Solution::middle_node(Some(Box::new(n1)));
+        let head = create_list(vec![1, 2, 3, 4, 5]);
+        let mid = Solution::middle_node(head);
 
         // Collect mid to end
         let mut items: Vec<i32> = Vec::new();
