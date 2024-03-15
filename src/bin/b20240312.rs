@@ -10,6 +10,7 @@ fn main() {
     let mut input: Vec<i32> = vec![0];
     Solution::move_zeroes(&mut input);
     Solution::diameter_of_binary_tree(None);
+    Solution::search(vec![1], 1);
 }
 
 impl Solution {
@@ -103,6 +104,26 @@ impl Solution {
 
         get_diameter(&root)
     }
+
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let mut l: i32 = 0;
+        let mut h: i32 = nums.len() as i32 - 1;
+
+        while l <= h {
+            let mid = ((h - l) / 2) + l;
+            if nums[mid as usize] == target {
+                return mid;
+            }
+            if nums[mid as usize] < target {
+                // Go higher
+                l = mid + 1;
+            } else {
+                // Go lower
+                h = mid - 1;
+            }
+        }
+        -1
+    }
 }
 
 #[cfg(test)]
@@ -110,6 +131,14 @@ mod tests {
     use leetcode_easy::{create_list, create_tree, flatten_tree};
 
     use super::*;
+
+    #[test]
+    fn test_search() {
+        assert_eq!(Solution::search(vec![-1, 0, 3, 5, 9, 12], 9), 4);
+        assert_eq!(Solution::search(vec![-1, 0, 3, 5, 9, 12], 2), -1);
+        assert_eq!(Solution::search(vec![5], -5), -1);
+        assert_eq!(Solution::search(vec![5], 5), 0);
+    }
 
     #[test]
     fn test_diameter_of_binary_tree_1() {
