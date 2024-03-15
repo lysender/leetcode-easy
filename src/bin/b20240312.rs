@@ -9,6 +9,7 @@ fn main() {
     Solution::is_palindrome(None);
     let mut input: Vec<i32> = vec![0];
     Solution::move_zeroes(&mut input);
+    Solution::diameter_of_binary_tree(None);
 }
 
 impl Solution {
@@ -63,6 +64,45 @@ impl Solution {
             }
         }
     }
+
+    pub fn diameter_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn get_height(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            let Some(node_val) = node else {
+                return 0;
+            };
+
+            let node_rc = node_val.borrow();
+            let hl = get_height(&node_rc.left);
+            let hr = get_height(&node_rc.right);
+
+            // Height of a tree is 1 + the height of left or right, whichever is higher
+            1 + hl.max(hr)
+        }
+
+        fn get_diameter(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            let Some(node_val) = node else {
+                return 0;
+            };
+
+            let node_rc = node_val.borrow();
+
+            let hl = get_height(&node_rc.left);
+            let hr = get_height(&node_rc.right);
+
+            let dl = get_diameter(&node_rc.left);
+            let dr = get_diameter(&node_rc.right);
+
+            // Diameter of a tree is any of the following, whichever is higher:
+            // - diameter of left
+            // - diameter of right
+            // - height of left + height of right
+            //   - we are only counting the steps to get to the other node
+            //   - if we want to count each node, we need to add 1
+            dl.max(dr).max(hl + hr)
+        }
+
+        get_diameter(&root)
+    }
 }
 
 #[cfg(test)]
@@ -70,6 +110,20 @@ mod tests {
     use leetcode_easy::{create_list, create_tree, flatten_tree};
 
     use super::*;
+
+    #[test]
+    fn test_diameter_of_binary_tree_1() {
+        let input: Vec<Option<i32>> = vec![Some(1), Some(2), Some(3), Some(4), Some(5)];
+        let root = create_tree(input);
+        assert_eq!(Solution::diameter_of_binary_tree(root), 3);
+    }
+
+    #[test]
+    fn test_diameter_of_binary_tree_2() {
+        let input: Vec<Option<i32>> = vec![Some(1), Some(2)];
+        let root = create_tree(input);
+        assert_eq!(Solution::diameter_of_binary_tree(root), 1);
+    }
 
     #[test]
     fn test_move_zeroes_1() {
